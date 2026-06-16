@@ -7,17 +7,7 @@ export const PROVIDERS: ProviderDef[] = [
     requiresApiKey: true,
     apiKeyLabel: 'OpenAI API Key',
     apiKeyHelpUrl: 'https://platform.openai.com/api-keys',
-    models: [
-      { id: 'gpt-4.1', name: 'GPT-4.1' },
-      { id: 'gpt-4.1-mini', name: 'GPT-4.1 Mini' },
-      { id: 'gpt-4o', name: 'GPT-4o' },
-      { id: 'gpt-4o-mini', name: 'GPT-4o Mini' },
-      { id: 'o4-mini', name: 'O4 Mini' },
-      { id: 'gpt-5', name: 'GPT-5' },
-      { id: 'gpt-5-mini', name: 'GPT-5 Mini' },
-      { id: 'o3', name: 'O3' },
-      { id: 'o3-mini', name: 'O3 Mini' },
-    ],
+    models: [],
   },
   {
     id: 'anthropic',
@@ -25,14 +15,7 @@ export const PROVIDERS: ProviderDef[] = [
     requiresApiKey: true,
     apiKeyLabel: 'Anthropic API Key',
     apiKeyHelpUrl: 'https://console.anthropic.com/settings/keys',
-    models: [
-      { id: 'claude-sonnet-4-6', name: 'Claude Sonnet 4.6' },
-      { id: 'claude-opus-4-8', name: 'Claude Opus 4.8' },
-      { id: 'claude-haiku-4-5', name: 'Claude Haiku 4.5' },
-      { id: 'claude-sonnet-4-5', name: 'Claude Sonnet 4.5' },
-      { id: 'claude-opus-4-5', name: 'Claude Opus 4.5' },
-      { id: 'claude-fable-5', name: 'Claude Fable 5' },
-    ],
+    models: [],
   },
   {
     id: 'google',
@@ -40,12 +23,7 @@ export const PROVIDERS: ProviderDef[] = [
     requiresApiKey: true,
     apiKeyLabel: 'Google AI API Key',
     apiKeyHelpUrl: 'https://aistudio.google.com/apikey',
-    models: [
-      { id: 'gemini-2.5-pro', name: 'Gemini 2.5 Pro' },
-      { id: 'gemini-2.5-flash', name: 'Gemini 2.5 Flash' },
-      { id: 'gemini-2.0-flash', name: 'Gemini 2.0 Flash' },
-      { id: 'gemini-2.0-flash-lite', name: 'Gemini 2.0 Flash Lite' },
-    ],
+    models: [],
   },
   {
     id: 'groq',
@@ -53,12 +31,7 @@ export const PROVIDERS: ProviderDef[] = [
     requiresApiKey: true,
     apiKeyLabel: 'Groq API Key',
     apiKeyHelpUrl: 'https://console.groq.com/keys',
-    models: [
-      { id: 'llama-4-scout-17b-16e-instruct', name: 'Llama 4 Scout' },
-      { id: 'llama-4-maverick-17b-128e-instruct', name: 'Llama 4 Maverick' },
-      { id: 'deepseek-r1-distill-llama-70b', name: 'DeepSeek R1 70B' },
-      { id: 'qwen-2.5-32b', name: 'Qwen 2.5 32B' },
-    ],
+    models: [],
   },
   {
     id: 'mistral',
@@ -66,12 +39,7 @@ export const PROVIDERS: ProviderDef[] = [
     requiresApiKey: true,
     apiKeyLabel: 'Mistral API Key',
     apiKeyHelpUrl: 'https://console.mistral.ai/api-keys',
-    models: [
-      { id: 'mistral-large-latest', name: 'Mistral Large' },
-      { id: 'mistral-small-latest', name: 'Mistral Small' },
-      { id: 'codestral-latest', name: 'Codestral' },
-      { id: 'mistral-nemo-latest', name: 'Mistral Nemo' },
-    ],
+    models: [],
   },
   {
     id: 'deepseek',
@@ -79,10 +47,7 @@ export const PROVIDERS: ProviderDef[] = [
     requiresApiKey: true,
     apiKeyLabel: 'DeepSeek API Key',
     apiKeyHelpUrl: 'https://platform.deepseek.com/api_keys',
-    models: [
-      { id: 'deepseek-chat', name: 'DeepSeek V3' },
-      { id: 'deepseek-reasoner', name: 'DeepSeek R1' },
-    ],
+    models: [],
   },
   {
     id: 'xai',
@@ -90,12 +55,7 @@ export const PROVIDERS: ProviderDef[] = [
     requiresApiKey: true,
     apiKeyLabel: 'xAI API Key',
     apiKeyHelpUrl: 'https://console.x.ai',
-    models: [
-      { id: 'grok-4', name: 'Grok 4' },
-      { id: 'grok-4-mini', name: 'Grok 4 Mini' },
-      { id: 'grok-3', name: 'Grok 3' },
-      { id: 'grok-3-mini', name: 'Grok 3 Mini' },
-    ],
+    models: [],
   },
   {
     id: 'perplexity',
@@ -103,12 +63,7 @@ export const PROVIDERS: ProviderDef[] = [
     requiresApiKey: true,
     apiKeyLabel: 'Perplexity API Key',
     apiKeyHelpUrl: 'https://www.perplexity.ai/settings/api',
-    models: [
-      { id: 'sonar-pro', name: 'Sonar Pro' },
-      { id: 'sonar', name: 'Sonar' },
-      { id: 'sonar-reasoning-pro', name: 'Sonar Reasoning Pro' },
-      { id: 'sonar-reasoning', name: 'Sonar Reasoning' },
-    ],
+    models: [],
   },
   {
     id: 'cohere',
@@ -116,11 +71,7 @@ export const PROVIDERS: ProviderDef[] = [
     requiresApiKey: true,
     apiKeyLabel: 'Cohere API Key',
     apiKeyHelpUrl: 'https://dashboard.cohere.com/api-keys',
-    models: [
-      { id: 'command-r-plus', name: 'Command R+' },
-      { id: 'command-r', name: 'Command R' },
-      { id: 'command-a', name: 'Command A' },
-    ],
+    models: [],
   },
   {
     id: 'togetherai',
@@ -128,13 +79,7 @@ export const PROVIDERS: ProviderDef[] = [
     requiresApiKey: true,
     apiKeyLabel: 'Together API Key',
     apiKeyHelpUrl: 'https://api.together.ai/settings/api-keys',
-    models: [
-      { id: 'meta-llama/Llama-4-Maverick-17B-128E-Instruct-FP8', name: 'Llama 4 Maverick' },
-      { id: 'meta-llama/Llama-4-Scout-17B-16E-Instruct', name: 'Llama 4 Scout' },
-      { id: 'deepseek-ai/DeepSeek-R1', name: 'DeepSeek R1' },
-      { id: 'deepseek-ai/DeepSeek-V3', name: 'DeepSeek V3' },
-      { id: 'Qwen/Qwen2.5-72B-Instruct-Turbo', name: 'Qwen 2.5 72B' },
-    ],
+    models: [],
   },
   {
     id: 'fireworks',
@@ -142,12 +87,7 @@ export const PROVIDERS: ProviderDef[] = [
     requiresApiKey: true,
     apiKeyLabel: 'Fireworks API Key',
     apiKeyHelpUrl: 'https://fireworks.ai/account/api-keys',
-    models: [
-      { id: 'accounts/fireworks/models/llama4-maverick-instruct-basic', name: 'Llama 4 Maverick' },
-      { id: 'accounts/fireworks/models/deepseek-r1', name: 'DeepSeek R1' },
-      { id: 'accounts/fireworks/models/deepseek-v3', name: 'DeepSeek V3' },
-      { id: 'accounts/fireworks/models/qwen2p5-72b-instruct', name: 'Qwen 2.5 72B' },
-    ],
+    models: [],
   },
   {
     id: 'cerebras',
@@ -155,11 +95,7 @@ export const PROVIDERS: ProviderDef[] = [
     requiresApiKey: true,
     apiKeyLabel: 'Cerebras API Key',
     apiKeyHelpUrl: 'https://cloud.cerebras.ai/api-keys',
-    models: [
-      { id: 'llama-4-maverick-17b-128e-instruct-fp8', name: 'Llama 4 Maverick' },
-      { id: 'llama-4-scout-17b-16e-instruct', name: 'Llama 4 Scout' },
-      { id: 'llama3.3-70b', name: 'Llama 3.3 70B' },
-    ],
+    models: [],
   },
   {
     id: 'bedrock',
@@ -167,12 +103,7 @@ export const PROVIDERS: ProviderDef[] = [
     requiresApiKey: true,
     apiKeyLabel: 'AWS Access Key ID',
     apiKeyHelpUrl: 'https://console.aws.amazon.com/iam',
-    models: [
-      { id: 'us.anthropic.claude-sonnet-4-6-v1:0', name: 'Claude Sonnet 4.6' },
-      { id: 'us.anthropic.claude-opus-4-8-v1:0', name: 'Claude Opus 4.8' },
-      { id: 'us.anthropic.claude-haiku-4-5-v1:0', name: 'Claude Haiku 4.5' },
-      { id: 'us.meta.llama4-maverick-17b-instruct-v1:0', name: 'Llama 4 Maverick' },
-    ],
+    models: [],
     extraFields: [
       { name: 'secretKey', label: 'AWS Secret Access Key', type: 'text', placeholder: 'Your AWS secret key' },
       { name: 'region', label: 'AWS Region', type: 'text', placeholder: 'us-east-1' },
@@ -184,11 +115,7 @@ export const PROVIDERS: ProviderDef[] = [
     requiresApiKey: true,
     apiKeyLabel: 'Azure API Key',
     apiKeyHelpUrl: 'https://portal.azure.com',
-    models: [
-      { id: 'gpt-4.1', name: 'GPT-4.1' },
-      { id: 'gpt-4o', name: 'GPT-4o' },
-      { id: 'gpt-4o-mini', name: 'GPT-4o Mini' },
-    ],
+    models: [],
     extraFields: [
       { name: 'resourceName', label: 'Resource Name', type: 'text', placeholder: 'my-resource' },
     ],
@@ -201,15 +128,7 @@ export const PROVIDERS: ProviderDef[] = [
     apiKeyHelpUrl: 'https://openrouter.ai/keys',
     isOpenAICompatible: true,
     defaultBaseUrl: 'https://openrouter.ai/api/v1',
-    models: [
-      { id: 'anthropic/claude-sonnet-4-6', name: 'Claude Sonnet 4.6' },
-      { id: 'anthropic/claude-opus-4-8', name: 'Claude Opus 4.8' },
-      { id: 'openai/gpt-5', name: 'GPT-5' },
-      { id: 'openai/gpt-4.1', name: 'GPT-4.1' },
-      { id: 'google/gemini-2.5-pro', name: 'Gemini 2.5 Pro' },
-      { id: 'deepseek/deepseek-r1', name: 'DeepSeek R1' },
-      { id: 'meta-llama/llama-4-maverick', name: 'Llama 4 Maverick' },
-    ],
+    models: [],
   },
   {
     id: 'ollama',
@@ -219,14 +138,7 @@ export const PROVIDERS: ProviderDef[] = [
     apiKeyHelpUrl: 'https://ollama.com',
     isOpenAICompatible: true,
     defaultBaseUrl: 'http://localhost:11434/v1',
-    models: [
-      { id: 'llama3.3', name: 'Llama 3.3' },
-      { id: 'llama3.2', name: 'Llama 3.2' },
-      { id: 'qwen2.5', name: 'Qwen 2.5' },
-      { id: 'codellama', name: 'Code Llama' },
-      { id: 'mistral', name: 'Mistral' },
-      { id: 'deepseek-r1', name: 'DeepSeek R1' },
-    ],
+    models: [],
   },
   {
     id: 'lmstudio',
@@ -236,7 +148,7 @@ export const PROVIDERS: ProviderDef[] = [
     apiKeyHelpUrl: 'https://lmstudio.ai',
     isOpenAICompatible: true,
     defaultBaseUrl: 'http://localhost:1234/v1',
-    models: [{ id: 'auto', name: 'Auto (use loaded model)' }],
+    models: [],
   },
   {
     id: 'custom',
@@ -246,7 +158,7 @@ export const PROVIDERS: ProviderDef[] = [
     apiKeyHelpUrl: '',
     isOpenAICompatible: true,
     defaultBaseUrl: '',
-    models: [{ id: 'custom', name: 'Custom Model' }],
+    models: [],
     extraFields: [
       { name: 'baseUrl', label: 'Base URL', type: 'url', placeholder: 'https://api.example.com/v1', helpText: 'OpenAI-compatible API endpoint' },
     ],

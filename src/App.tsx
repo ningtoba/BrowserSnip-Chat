@@ -29,7 +29,7 @@ export default function App() {
 
   if (view === 'settings') {
     return (
-      <div className="h-full">
+      <div className="h-screen">
         <ProviderSetup
           onConfigured={handleConfigured}
           initialConfig={chat.activeSession?.providerConfig ?? getLastProviderConfig()}

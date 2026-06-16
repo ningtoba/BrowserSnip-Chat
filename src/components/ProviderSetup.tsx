@@ -20,15 +20,13 @@ export function ProviderSetup({ onConfigured, initialConfig }: Props) {
   const [baseUrl, setBaseUrl] = useState(initialConfig?.baseUrl ?? '')
   const [showApiKey, setShowApiKey] = useState(false)
 
-  // Model fetching state
   const [fetchStatus, setFetchStatus] = useState<FetchStatus>('idle')
   const [fetchedModels, setFetchedModels] = useState<ProviderModel[] | null>(null)
   const [fetchError, setFetchError] = useState<string | null>(null)
   const [customModelInput, setCustomModelInput] = useState('')
 
   const provider = selectedProviderId ? getProvider(selectedProviderId) : null
-  const modelList = fetchedModels ?? provider?.models ?? []
-  const isCustomModel = selectedModel && !modelList.find((m) => m.id === selectedModel) && selectedModel !== '__custom__'
+  const hasFetchedModels = fetchedModels !== null && fetchedModels.length > 0
 
   const handleProviderChange = (id: string) => {
     setSelectedProviderId(id)
@@ -36,6 +34,7 @@ export function ProviderSetup({ onConfigured, initialConfig }: Props) {
     setFetchedModels(null)
     setFetchStatus('idle')
     setFetchError(null)
+    setCustomModelInput('')
     setExtraValues({})
     const p = getProvider(id)
     if (p?.defaultBaseUrl) {
@@ -52,6 +51,8 @@ export function ProviderSetup({ onConfigured, initialConfig }: Props) {
     setFetchStatus('loading')
     setFetchError(null)
     setFetchedModels(null)
+    setSelectedModel('')
+    setCustomModelInput('')
 
     try {
       const resolvedBaseUrl = p.isOpenAICompatible ? baseUrl : undefined
@@ -61,8 +62,9 @@ export function ProviderSetup({ onConfigured, initialConfig }: Props) {
         setFetchedModels(result.models)
         setFetchStatus('success')
       } else if (result.success && result.models.length === 0) {
-        setFetchStatus('error')
-        setFetchError('No models found. Check your API key and permissions.')
+        // Key is valid but provider doesn't return a model list (e.g. Anthropic)
+        setFetchedModels([])
+        setFetchStatus('success')
       } else {
         setFetchStatus('error')
         setFetchError(result.error ?? 'Failed to fetch models')
@@ -82,8 +84,9 @@ export function ProviderSetup({ onConfigured, initialConfig }: Props) {
     if (model === '__custom__') {
       model = customModelInput
     }
-    if (!model) {
-      model = modelList[0]?.id ?? ''
+    // If models were fetched but list is empty (Anthropic), use custom input
+    if (!model && fetchedModels !== null && fetchedModels.length === 0 && customModelInput) {
+      model = customModelInput
     }
 
     const config: ProviderConfig = {
@@ -106,8 +109,12 @@ export function ProviderSetup({ onConfigured, initialConfig }: Props) {
     const p = getProvider(selectedProviderId)
     if (!p) return false
     if (p.requiresApiKey && !apiKey.trim()) return false
-    if (!selectedModel && !customModelInput && modelList.length === 0) return false
-    if (selectedModel === '__custom__' && !customModelInput.trim()) return false
+    // Must have fetched models (or successfully validated for key-only providers)
+    if (fetchStatus !== 'success') return false
+    // If models were returned, one must be selected
+    if (hasFetchedModels && !selectedModel) return false
+    // If no models returned (Anthropic), must have custom model input
+    if (fetchedModels !== null && fetchedModels.length === 0 && !customModelInput.trim()) return false
     return true
   }
 
@@ -248,7 +255,9 @@ export function ProviderSetup({ onConfigured, initialConfig }: Props) {
                 ) : fetchStatus === 'success' ? (
                   <>
                     <CheckCircle2 className="h-4 w-4 text-[#34d399]" />
-                    Models loaded ({fetchedModels!.length} available)
+                    {hasFetchedModels
+                      ? `Models loaded (${fetchedModels!.length} available)`
+                      : 'Connection verified'}
                   </>
                 ) : (
                   <>
@@ -258,6 +267,22 @@ export function ProviderSetup({ onConfigured, initialConfig }: Props) {
                 )}
               </button>
 
+              {/* Idle hint */}
+              {fetchStatus === 'idle' && canFetch() && (
+                <p className="mt-1.5 text-xs text-[#5c6080]">
+                  Click to verify your API key and load available models
+                </p>
+              )}
+
+              {/* Success message */}
+              {fetchStatus === 'success' && (
+                <p className="mt-1.5 text-xs text-[#34d399]">
+                  {hasFetchedModels
+                    ? 'Connection verified — select a model below'
+                    : 'Connection verified — enter a model name below'}
+                </p>
+              )}
+
               {/* Fetch error */}
               {fetchStatus === 'error' && fetchError && (
                 <div className="mt-2 flex items-start gap-2 rounded-[6px] border border-[#f87171]/20 bg-[#f87171]/10 px-3 py-2">
@@ -265,28 +290,14 @@ export function ProviderSetup({ onConfigured, initialConfig }: Props) {
                   <p className="text-xs text-[#f87171]">{fetchError}</p>
                 </div>
               )}
-
-              {/* Fetch success with fallback indicator */}
-              {fetchStatus === 'success' && fetchedModels && (
-                <p className="mt-1.5 text-xs text-[#34d399]">
-                  Connection verified — API key is working
-                </p>
-              )}
-
-              {/* Idle hint */}
-              {fetchStatus === 'idle' && canFetch() && (
-                <p className="mt-1.5 text-xs text-[#5c6080]">
-                  Click to verify your API key and load available models
-                </p>
-              )}
             </div>
           )}
 
-          {/* Model Select (appears after fetching, or uses static list) */}
-          {provider && modelList.length > 0 && (
+          {/* Model dropdown — only after successful fetch with models */}
+          {hasFetchedModels && (
             <div className="animate-[fade-in_0.3s_ease-out]">
               <label className="mb-1.5 block text-sm font-medium text-[#a8adc4]">
-                Model {fetchedModels ? '(from API)' : '(built-in list)'}
+                Model
               </label>
               <select
                 value={selectedModel}
@@ -294,7 +305,7 @@ export function ProviderSetup({ onConfigured, initialConfig }: Props) {
                 className="doodle-select"
               >
                 <option value="">Choose a model…</option>
-                {modelList.map((m) => (
+                {fetchedModels!.map((m) => (
                   <option key={m.id} value={m.id}>
                     {m.name}
                   </option>
@@ -312,15 +323,25 @@ export function ProviderSetup({ onConfigured, initialConfig }: Props) {
                   autoFocus
                 />
               )}
+            </div>
+          )}
 
-              {isCustomModel && (
-                <p className="mt-1 text-xs text-[#5c6080]">
-                  Using custom model:{' '}
-                  <code className="rounded bg-[#161922] px-1 py-0.5 text-[#a5b4fc]">
-                    {selectedModel}
-                  </code>
-                </p>
-              )}
+          {/* Custom model input — after successful fetch but no models returned (e.g. Anthropic) */}
+          {fetchStatus === 'success' && fetchedModels !== null && fetchedModels.length === 0 && (
+            <div className="animate-[fade-in_0.3s_ease-out]">
+              <label className="mb-1.5 block text-sm font-medium text-[#a8adc4]">
+                Model Name
+              </label>
+              <input
+                type="text"
+                value={customModelInput}
+                onChange={(e) => setCustomModelInput(e.target.value)}
+                placeholder="e.g. claude-sonnet-4-6"
+                className="doodle-input"
+              />
+              <p className="mt-1 text-xs text-[#5c6080]">
+                This provider does not expose a model list. Enter the model name manually.
+              </p>
             </div>
           )}
 
