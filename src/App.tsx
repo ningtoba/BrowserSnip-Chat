@@ -39,7 +39,7 @@ export default function App() {
   }
 
   return (
-    <div className="flex h-full">
+    <div className="flex h-screen">
       <SessionSidebar
         sessions={chat.sessions}
         activeSessionId={chat.activeSession?.id ?? null}
@@ -49,7 +49,7 @@ export default function App() {
         onOpenSettings={() => setView('settings')}
         currentConfig={chat.activeSession?.providerConfig ?? getLastProviderConfig()}
       />
-      <div className="flex flex-1 flex-col bg-[var(--color-surface-0)]">
+      <div className="flex flex-1 flex-col bg-[#0a0b10]">
         <ChatWindow
           messages={chat.messages}
           isStreaming={chat.isStreaming}

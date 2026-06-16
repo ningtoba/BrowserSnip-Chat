@@ -92,10 +92,18 @@ export function SessionSidebar({
           </p>
         ) : (
           sessions.map((session) => (
-            <button
+            <div
               key={session.id}
+              role="button"
+              tabIndex={0}
               onClick={() => onSelect(session.id)}
-              className={`group mb-0.5 flex w-full items-center gap-2 rounded-[6px] px-3 py-2 text-left text-sm transition-colors ${
+              onKeyDown={(e) => {
+                if (e.key === 'Enter' || e.key === ' ') {
+                  e.preventDefault()
+                  onSelect(session.id)
+                }
+              }}
+              className={`group mb-0.5 flex w-full items-center gap-2 rounded-[6px] px-3 py-2 text-left text-sm transition-colors cursor-pointer select-none ${
                 session.id === activeSessionId
                   ? 'bg-[#6366f1]/10 text-[#eeeff5] border border-[#6366f1]/20'
                   : 'text-[#a8adc4] hover:bg-[#161922] hover:text-[#eeeff5] border border-transparent'
@@ -112,7 +120,7 @@ export function SessionSidebar({
               >
                 <Trash2 className="h-3.5 w-3.5" />
               </button>
-            </button>
+            </div>
           ))
         )}
       </div>

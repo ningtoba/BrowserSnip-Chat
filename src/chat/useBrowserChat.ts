@@ -19,6 +19,33 @@ function generateId(): string {
   return `${Date.now()}-${Math.random().toString(36).slice(2, 9)}`
 }
 
+function extractErrorMessage(err: unknown): string {
+  if (!(err instanceof Error)) return 'Unknown error occurred'
+
+  const msg = err.message
+
+  // AI SDK wraps provider errors — extract the meaningful part
+  // Pattern: "AI_RetryError: ... Last error: <actual message>"
+  const lastErrorMatch = msg.match(/Last error:\s*(.+?)(?:\n|$)/)
+  if (lastErrorMatch) {
+    return lastErrorMatch[1].trim()
+  }
+
+  // Pattern: "Error: <code> <message>"
+  const tooManyReq = msg.match(/429.*?(?:You exceeded|Rate limit|quota)/i)
+  if (tooManyReq) {
+    return 'Rate limit exceeded. Please wait and try again.'
+  }
+
+  // Unauthorized
+  if (msg.includes('401') || msg.includes('Unauthorized') || msg.includes('Invalid API key')) {
+    return 'Invalid API key. Please check your provider settings.'
+  }
+
+  // Generic — strip the error name prefix
+  return msg.replace(/^AI_\w+Error:\s*/, '').replace(/^\w+Error:\s*/, '')
+}
+
 export interface UseBrowserChatReturn {
   sessions: ChatSession[]
   activeSession: ChatSession | null
@@ -119,10 +146,9 @@ export function useBrowserChat(): UseBrowserChatReturn {
       }
     } catch (err: unknown) {
       if (err instanceof Error && err.name === 'AbortError') {
-        // user stopped — keep partial response
         return
       }
-      const message = err instanceof Error ? err.message : 'Unknown error occurred'
+      const message = extractErrorMessage(err)
       setError(message)
     } finally {
       setIsStreaming(false)
