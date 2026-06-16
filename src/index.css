@@ -1,101 +1,297 @@
 @import 'tailwindcss';
 
+/* ── BrowserSnip Design Tokens ── */
 @theme {
-  --color-surface-0: oklch(14% 0.01 260);
-  --color-surface-1: oklch(18% 0.01 260);
-  --color-surface-2: oklch(22% 0.01 260);
-  --color-surface-3: oklch(28% 0.01 260);
-  --color-border: oklch(32% 0.01 260);
-  --color-text-primary: oklch(92% 0.005 260);
-  --color-text-secondary: oklch(68% 0.01 260);
-  --color-text-muted: oklch(48% 0.01 260);
-  --color-accent: oklch(72% 0.18 250);
-  --color-accent-strong: oklch(68% 0.21 250);
-  --color-success: oklch(70% 0.18 150);
-  --color-error: oklch(68% 0.21 25);
-  --font-sans: 'Inter', system-ui, -apple-system, sans-serif;
-  --font-mono: 'JetBrains Mono', 'Fira Code', monospace;
+  --color-cream: #0a0b10;
+  --color-cream-light: #11131c;
+  --color-cream-soft: #161922;
+  --color-cream-border: #1e2035;
+
+  --color-ink: #eeeff5;
+  --color-ink-soft: #a8adc4;
+  --color-ink-muted: #5c6080;
+
+  --color-accent: #6366f1;
+  --color-accent-hover: #818cf8;
+  --color-accent-ring: rgba(99, 102, 241, 0.25);
+
+  --color-success: #34d399;
+  --color-warn: #fbbf24;
+  --color-danger: #f87171;
+
+  --font-mono: 'JetBrains Mono', 'SF Mono', ui-monospace, Menlo, monospace;
+  --font-display: -apple-system, BlinkMacSystemFont, 'SF Pro Display', system-ui, sans-serif;
+  --font-body: -apple-system, BlinkMacSystemFont, 'SF Pro Text', 'Segoe UI', system-ui, sans-serif;
+
+  --radius-doodle: 6px;
+  --radius-doodle-md: 10px;
+  --radius-doodle-lg: 14px;
+
+  --shadow-doodle: 0 1px 3px rgba(0, 0, 0, 0.3), 0 1px 2px rgba(0, 0, 0, 0.2);
+  --shadow-doodle-hover: 0 4px 16px rgba(0, 0, 0, 0.4), 0 2px 4px rgba(0, 0, 0, 0.3);
+  --shadow-doodle-card: 0 2px 8px rgba(0, 0, 0, 0.3), 0 1px 3px rgba(0, 0, 0, 0.2);
+  --shadow-doodle-focus: 0 0 0 3px rgba(99, 102, 241, 0.35);
+  --shadow-glow: 0 0 20px rgba(99, 102, 241, 0.2);
 }
 
-* {
-  box-sizing: border-box;
+/* ── Base ── */
+@layer base {
+  * {
+    scrollbar-width: thin;
+    scrollbar-color: #2a2d42 #0a0b10;
+  }
+
+  *::-webkit-scrollbar {
+    width: 5px;
+  }
+  *::-webkit-scrollbar-track {
+    background: #0a0b10;
+  }
+  *::-webkit-scrollbar-thumb {
+    background: #2a2d42;
+    border-radius: 3px;
+  }
+  *::-webkit-scrollbar-thumb:hover {
+    background: #3a3d52;
+  }
+
+  html {
+    height: -webkit-fill-available;
+  }
+
+  body {
+    min-height: 100dvh;
+    min-height: -webkit-fill-available;
+    background: #0a0b10;
+    color: #eeeff5;
+    font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Text', 'Segoe UI', system-ui, sans-serif;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+
+  input[type='text'],
+  input[type='password'],
+  input[type='url'],
+  input[type='number'],
+  textarea,
+  select {
+    font-family: 'JetBrains Mono', 'SF Mono', ui-monospace, Menlo, monospace;
+  }
+
+  ::selection {
+    background: rgba(99, 102, 241, 0.3);
+    color: #eeeff5;
+  }
 }
 
-html, body, #root {
-  height: 100%;
-  margin: 0;
-  padding: 0;
-  background: var(--color-surface-0);
-  color: var(--color-text-primary);
-  font-family: var(--font-sans);
-  -webkit-font-smoothing: antialiased;
+/* ── Animations ── */
+@keyframes doodle-pop {
+  0% { transform: scale(0.95); opacity: 0; }
+  100% { transform: scale(1); opacity: 1; }
 }
-
-::-webkit-scrollbar {
-  width: 6px;
+@keyframes pulse-glow {
+  0%, 100% { box-shadow: 0 0 12px rgba(99, 102, 241, 0.3); }
+  50% { box-shadow: 0 0 28px rgba(99, 102, 241, 0.6); }
 }
-::-webkit-scrollbar-track {
-  background: transparent;
-}
-::-webkit-scrollbar-thumb {
-  background: var(--color-surface-3);
-  border-radius: 3px;
-}
-::-webkit-scrollbar-thumb:hover {
-  background: var(--color-text-muted);
-}
-
-.message-content p {
-  margin: 0.25em 0;
-}
-.message-content p:first-child {
-  margin-top: 0;
-}
-.message-content p:last-child {
-  margin-bottom: 0;
-}
-.message-content pre {
-  background: var(--color-surface-0);
-  border: 1px solid var(--color-border);
-  border-radius: 8px;
-  padding: 1em;
-  overflow-x: auto;
-  font-family: var(--font-mono);
-  font-size: 0.875rem;
-  line-height: 1.5;
-}
-.message-content code {
-  font-family: var(--font-mono);
-  font-size: 0.875em;
-}
-.message-content :not(pre) > code {
-  background: var(--color-surface-2);
-  padding: 0.15em 0.4em;
-  border-radius: 4px;
-  border: 1px solid var(--color-border);
-}
-.message-content ul, .message-content ol {
-  padding-left: 1.5em;
-}
-
 @keyframes fade-in {
-  from { opacity: 0; transform: translateY(4px); }
-  to { opacity: 1; transform: translateY(0); }
+  0% { opacity: 0; }
+  100% { opacity: 1; }
 }
-@keyframes slide-in {
-  from { opacity: 0; transform: translateX(-8px); }
-  to { opacity: 1; transform: translateX(0); }
+@keyframes slide-in-left {
+  0% { transform: translateX(-100%); opacity: 0; }
+  100% { transform: translateX(0); opacity: 1; }
+}
+@keyframes slide-up {
+  0% { transform: translateY(12px); opacity: 0; }
+  100% { transform: translateY(0); opacity: 1; }
 }
 @keyframes pulse-dot {
   0%, 100% { opacity: 0.3; }
   50% { opacity: 1; }
 }
-.animate-fade-in {
-  animation: fade-in 0.3s ease-out;
+
+/* ── Components ── */
+@layer components {
+  /* Primary button */
+  .doodle-btn {
+    @apply relative w-full overflow-hidden font-semibold px-4 py-2.5 text-sm
+           transition-all duration-200 active:scale-[0.98];
+    background: linear-gradient(135deg, #6366f1, #5558e6);
+    color: #ffffff;
+    border-radius: 6px;
+    box-shadow: 0 2px 8px rgba(99, 102, 241, 0.3);
+  }
+  .doodle-btn:hover:not(:disabled) {
+    box-shadow: 0 4px 16px rgba(99, 102, 241, 0.45);
+    transform: translateY(-1px);
+  }
+  .doodle-btn:active:not(:disabled) {
+    box-shadow: 0 1px 4px rgba(99, 102, 241, 0.2);
+    transform: translateY(0) scale(0.98);
+  }
+  .doodle-btn:disabled {
+    @apply opacity-40 cursor-not-allowed;
+    transform: none;
+    box-shadow: none;
+  }
+
+  /* Secondary button */
+  .doodle-btn-secondary {
+    @apply w-full px-4 py-2.5 text-sm font-semibold transition-all duration-200
+           active:scale-[0.98];
+    background: #161922;
+    color: #eeeff5;
+    border: 1px solid #1e2035;
+    border-radius: 6px;
+    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
+  }
+  .doodle-btn-secondary:hover:not(:disabled) {
+    border-color: #2a2d42;
+    background: #1c1f30;
+  }
+  .doodle-btn-secondary:disabled {
+    @apply opacity-40 cursor-not-allowed;
+    transform: none;
+  }
+
+  /* Danger button */
+  .doodle-btn-danger {
+    @apply inline-flex items-center justify-center gap-2 px-5 py-2.5
+           font-medium text-sm transition-all duration-200 ease-out
+           active:scale-[0.97] disabled:opacity-40 disabled:pointer-events-none
+           focus-visible:outline-none cursor-pointer select-none;
+    background: rgba(248, 113, 113, 0.15);
+    color: #f87171;
+    border: 1px solid rgba(248, 113, 113, 0.2);
+    border-radius: 6px;
+  }
+  .doodle-btn-danger:hover:not(:disabled) {
+    background: rgba(248, 113, 113, 0.25);
+    border-color: rgba(248, 113, 113, 0.4);
+  }
+  .doodle-btn-danger:focus-visible {
+    outline: none;
+    box-shadow: 0 0 0 2px rgba(248, 113, 113, 0.4);
+  }
+
+  /* Input */
+  .doodle-input {
+    @apply w-full px-3 py-2 text-sm transition-all duration-150 outline-none;
+    background: #0d0f17;
+    color: #eeeff5;
+    border: 1px solid #1e2035;
+    border-radius: 6px;
+  }
+  .doodle-input:hover {
+    border-color: #2a2d42;
+  }
+  .doodle-input:focus {
+    border-color: #6366f1;
+    box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.2);
+  }
+  .doodle-input::placeholder {
+    color: #5c6080;
+  }
+  .doodle-input:disabled {
+    @apply opacity-40 cursor-not-allowed;
+  }
+
+  /* Select */
+  .doodle-select {
+    @apply w-full appearance-none px-3 py-2 pr-10 text-sm transition-all duration-150 outline-none cursor-pointer;
+    background: #0d0f17;
+    color: #eeeff5;
+    border: 1px solid #1e2035;
+    border-radius: 6px;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%235c6080' stroke-width='2'%3E%3Cpath d='m6 9 6 6 6-6'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 10px center;
+  }
+  .doodle-select:hover {
+    border-color: #2a2d42;
+  }
+  .doodle-select:focus {
+    border-color: #6366f1;
+    box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.2);
+  }
+
+  /* Section card */
+  .doodle-section {
+    @apply p-4;
+    background: #11131c;
+    border: 1px solid #1e2035;
+    border-radius: 6px;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.2);
+  }
+
+  /* Chip / tab */
+  .doodle-chip {
+    @apply flex-1 border px-3 py-2 text-xs font-medium transition-all duration-150
+           cursor-pointer select-none;
+    border-radius: 6px;
+  }
+  .doodle-chip-active {
+    background: rgba(99, 102, 241, 0.12);
+    color: #a5b4fc;
+    border-color: rgba(99, 102, 241, 0.35);
+  }
+  .doodle-chip-inactive {
+    background: #11131c;
+    color: #5c6080;
+    border-color: #1e2035;
+  }
+  .doodle-chip-inactive:hover {
+    color: #a8adc4;
+    border-color: #2a2d42;
+    background: #161922;
+  }
+
+  /* Glass panel */
+  .bg-glass {
+    background: rgba(17, 19, 28, 0.85);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+  }
 }
-.animate-slide-in {
-  animation: slide-in 0.25s ease-out;
+
+/* ── Markdown content ── */
+.message-content p {
+  margin: 0.25em 0;
 }
-.animate-pulse-dot {
-  animation: pulse-dot 1.4s ease-in-out infinite;
+.message-content p:first-child { margin-top: 0; }
+.message-content p:last-child { margin-bottom: 0; }
+.message-content pre {
+  background: #0d0f17;
+  border: 1px solid #1e2035;
+  border-radius: 6px;
+  padding: 1em;
+  overflow-x: auto;
+  font-family: 'JetBrains Mono', 'SF Mono', ui-monospace, Menlo, monospace;
+  font-size: 0.8125rem;
+  line-height: 1.6;
+}
+.message-content code {
+  font-family: 'JetBrains Mono', 'SF Mono', ui-monospace, Menlo, monospace;
+  font-size: 0.8125rem;
+}
+.message-content :not(pre) > code {
+  background: #161922;
+  padding: 0.15em 0.4em;
+  border-radius: 4px;
+  border: 1px solid #1e2035;
+  color: #a5b4fc;
+}
+.message-content ul, .message-content ol {
+  padding-left: 1.5em;
+}
+.message-content a {
+  color: #818cf8;
+  text-decoration: underline;
+}
+
+/* ── Utilities ── */
+@layer utilities {
+  .h-screen-safe {
+    height: 100dvh;
+  }
 }

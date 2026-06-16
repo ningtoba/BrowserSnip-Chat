@@ -21,15 +21,15 @@ export function ChatWindow({ messages, isStreaming, error, onSend, onStop, disab
   }, [messages])
 
   return (
-    <div className="flex h-full flex-col">
+    <div className="flex h-full flex-col bg-[#0a0b10]">
       {/* Messages area */}
       <div className="flex-1 overflow-y-auto">
         {messages.length === 0 ? (
           <div className="flex h-full items-center justify-center">
-            <div className="max-w-md text-center animate-fade-in">
-              <div className="mx-auto mb-4 flex h-16 w-16 items-center justify-center rounded-2xl bg-[var(--color-accent)]/10">
+            <div className="max-w-md text-center animate-[doodle-pop_0.35s_cubic-bezier(0.34,1.56,0.64,1)]">
+              <div className="mx-auto mb-4 flex h-16 w-16 items-center justify-center rounded-[10px] bg-[#6366f1]/10 shadow-[0_0_20px_rgba(99,102,241,0.15)]">
                 <svg
-                  className="h-8 w-8 text-[var(--color-accent)]"
+                  className="h-8 w-8 text-[#6366f1]"
                   fill="none"
                   viewBox="0 0 24 24"
                   stroke="currentColor"
@@ -42,10 +42,10 @@ export function ChatWindow({ messages, isStreaming, error, onSend, onStop, disab
                   />
                 </svg>
               </div>
-              <h2 className="text-lg font-medium text-[var(--color-text-primary)]">
+              <h2 className="font-display text-lg font-medium text-[#eeeff5]">
                 Start a conversation
               </h2>
-              <p className="mt-1 text-sm text-[var(--color-text-secondary)]">
+              <p className="mt-1 text-sm text-[#a8adc4]">
                 Type a message below to begin chatting with the AI.
               </p>
             </div>
@@ -66,9 +66,9 @@ export function ChatWindow({ messages, isStreaming, error, onSend, onStop, disab
 
       {/* Error banner */}
       {error && (
-        <div className="mx-4 mb-2 flex items-center gap-2 rounded-lg border border-[var(--color-error)]/30 bg-[var(--color-error)]/10 px-3 py-2 animate-fade-in">
-          <AlertCircle className="h-4 w-4 shrink-0 text-[var(--color-error)]" />
-          <p className="text-xs text-[var(--color-error)]">{error}</p>
+        <div className="mx-4 mb-2 flex items-center gap-2 rounded-[6px] border border-[#f87171]/20 bg-[#f87171]/10 px-3 py-2 animate-[fade-in_0.3s_ease-out]">
+          <AlertCircle className="h-4 w-4 shrink-0 text-[#f87171]" />
+          <p className="text-xs text-[#f87171]">{error}</p>
         </div>
       )}
 

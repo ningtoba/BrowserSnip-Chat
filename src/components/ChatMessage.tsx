@@ -16,13 +16,13 @@ export function ChatMessage({ message, isStreaming }: Props) {
   const isUser = message.role === 'user'
 
   return (
-    <div className={`animate-fade-in flex gap-3 px-4 py-3 ${isUser ? '' : 'bg-[var(--color-surface-1)]/50'}`}>
+    <div className={`animate-[fade-in_0.3s_ease-out] flex gap-3 px-4 py-3 ${isUser ? '' : 'bg-[#0d0f17]/70'}`}>
       {/* Avatar */}
       <div
-        className={`flex h-7 w-7 shrink-0 items-center justify-center rounded-lg ${
+        className={`flex h-7 w-7 shrink-0 items-center justify-center rounded-[6px] ${
           isUser
-            ? 'bg-[var(--color-surface-3)] text-[var(--color-text-secondary)]'
-            : 'bg-[var(--color-accent)]/10 text-[var(--color-accent)]'
+            ? 'bg-[#161922] text-[#a8adc4] border border-[#1e2035]'
+            : 'bg-[#6366f1]/10 text-[#6366f1] border border-[#6366f1]/20'
         }`}
       >
         {isUser ? <User className="h-4 w-4" /> : <Sparkles className="h-4 w-4" />}
@@ -31,25 +31,25 @@ export function ChatMessage({ message, isStreaming }: Props) {
       {/* Content */}
       <div className="min-w-0 flex-1">
         <div className="mb-1 flex items-center gap-2">
-          <span className="text-xs font-medium text-[var(--color-text-secondary)]">
+          <span className="text-xs font-medium text-[#a8adc4]">
             {isUser ? 'You' : 'Assistant'}
           </span>
-          <span className="text-[11px] text-[var(--color-text-muted)]">
+          <span className="text-[11px] text-[#5c6080]">
             {formatTime(message.timestamp)}
           </span>
         </div>
 
-        <div className="message-content text-sm leading-relaxed text-[var(--color-text-primary)]">
+        <div className="message-content font-body text-sm leading-relaxed text-[#eeeff5]">
           {message.content ? (
             <ReactMarkdown remarkPlugins={[remarkGfm]}>
               {message.content}
             </ReactMarkdown>
           ) : isStreaming ? (
-            <span className="inline-flex items-center gap-1 text-[var(--color-text-muted)]">
+            <span className="inline-flex items-center gap-1 text-[#5c6080] font-mono text-xs">
               Thinking
-              <span className="animate-pulse-dot" style={{ animationDelay: '0s' }}>.</span>
-              <span className="animate-pulse-dot" style={{ animationDelay: '0.2s' }}>.</span>
-              <span className="animate-pulse-dot" style={{ animationDelay: '0.4s' }}>.</span>
+              <span className="animate-[pulse-dot_1.4s_ease-in-out_infinite]" style={{ animationDelay: '0s' }}>.</span>
+              <span className="animate-[pulse-dot_1.4s_ease-in-out_infinite]" style={{ animationDelay: '0.2s' }}>.</span>
+              <span className="animate-[pulse-dot_1.4s_ease-in-out_infinite]" style={{ animationDelay: '0.4s' }}>.</span>
             </span>
           ) : null}
         </div>
