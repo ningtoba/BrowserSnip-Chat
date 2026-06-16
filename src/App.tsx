@@ -57,6 +57,7 @@ export default function App() {
           onSend={chat.sendMessage}
           onStop={chat.stopGeneration}
           disabled={!hasConfig}
+          onDismissError={chat.dismissError}
         />
       </div>
     </div>
