@@ -90,7 +90,7 @@ function PreBlock({ children }: ComponentProps<'pre'>) {
 function CodeRenderer({ className, children, ...props }: ComponentProps<'code'>) {
   const match = /language-(\w+)/.exec(className || '')
 
-  // Inline code — no language class means it's not a fenced block
+  // Inline code
   if (!match) {
     return (
       <code className={className} {...props}>
@@ -99,20 +99,6 @@ function CodeRenderer({ className, children, ...props }: ComponentProps<'code'>)
     )
   }
 
-  const language = match[1]
-  const code = extractCodeText(children)
-
-  return <CodeBlock language={language} code={code} />
-}
-
-/** Pull the raw text out of the highlighted children nodes. */
-function extractCodeText(children: React.ReactNode): string {
-  if (typeof children === 'string') return children
-  if (Array.isArray(children)) {
-    return children.map((c) => extractCodeText(c)).join('')
-  }
-  if (children && typeof children === 'object' && 'props' in children) {
-    return extractCodeText((children as { props: { children?: React.ReactNode } }).props.children)
-  }
-  return ''
+  // Fenced code block — children already highlighted by rehype-highlight
+  return <CodeBlock language={match[1]}>{children}</CodeBlock>
 }
