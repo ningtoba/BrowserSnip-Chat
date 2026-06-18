@@ -4,6 +4,7 @@ export interface ChatMessage {
   id: string
   role: 'user' | 'assistant' | 'system'
   content: string
+  reasoning?: string
   timestamp: number
 }
 

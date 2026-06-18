@@ -24,7 +24,6 @@ function extractErrorMessage(err: unknown): string {
 
   const msg = err.message
 
-  // Quota / rate limit
   if (
     msg.includes('429') ||
     msg.includes('quota') ||
@@ -32,7 +31,6 @@ function extractErrorMessage(err: unknown): string {
     msg.includes('rate_limit') ||
     msg.includes('RESOURCE_EXHAUSTED')
   ) {
-    // Try to extract retry delay
     const retryMatch = msg.match(/retry in (\d+\.?\d*)s/)
     if (retryMatch) {
       const seconds = Math.ceil(parseFloat(retryMatch[1]))
@@ -41,7 +39,6 @@ function extractErrorMessage(err: unknown): string {
     return 'Rate limit exceeded. Please wait a moment and try again.'
   }
 
-  // Auth errors
   if (
     msg.includes('401') ||
     msg.includes('403') ||
@@ -53,22 +50,18 @@ function extractErrorMessage(err: unknown): string {
     return 'Invalid API key. Please check your provider settings.'
   }
 
-  // AI SDK wraps errors — extract the meaningful part after "Last error:"
   const lastErrorMatch = msg.match(/Last error:\s*(.+?)(?:\n|\* Quota|$)/)
   if (lastErrorMatch) {
     const extracted = lastErrorMatch[1].trim()
-    // Clean up trailing URLs and dots
     return extracted.replace(/\s*\.\s*$/, '.').replace(/\s*https?:\/\/\S+$/, '').trim()
   }
 
-  // Clean up common prefixes
   const cleaned = msg
     .replace(/^AI_\w+Error:\s*/, '')
     .replace(/^\w+Error:\s*/, '')
     .replace(/^Failed after \d+ attempts\.\s*/, '')
     .trim()
 
-  // Truncate overly long messages
   if (cleaned.length > 300) {
     return cleaned.slice(0, 280) + '…'
   }
@@ -110,7 +103,6 @@ export function useBrowserChat(): UseBrowserChatReturn {
   }, [])
 
   const sendMessage = useCallback(async (content: string) => {
-    // Capture the active session id at call time
     const sessionId = activeId
 
     let session = sessionId ? getSession(sessionId) : null
@@ -137,6 +129,7 @@ export function useBrowserChat(): UseBrowserChatReturn {
       id: generateId(),
       role: 'assistant',
       content: '',
+      reasoning: '',
       timestamp: Date.now(),
     }
 
@@ -167,15 +160,22 @@ export function useBrowserChat(): UseBrowserChatReturn {
       })
 
       let fullText = ''
+      let reasoningText = ''
 
-      for await (const chunk of result.textStream) {
-        fullText += chunk
+      for await (const part of result.fullStream) {
+        if (part.type === 'reasoning-delta') {
+          reasoningText += part.text
+        } else if (part.type === 'text-delta') {
+          fullText += part.text
+        }
+
         const sessionNow = getSession(session.id)
         if (sessionNow) {
           const msgs = [...sessionNow.messages]
           const lastMsg = msgs[msgs.length - 1]
           if (lastMsg && lastMsg.role === 'assistant') {
             lastMsg.content = fullText
+            lastMsg.reasoning = reasoningText || undefined
             updateSession(sessionNow.id, { messages: msgs })
             refreshSessions()
           }
@@ -188,8 +188,6 @@ export function useBrowserChat(): UseBrowserChatReturn {
 
       const message = extractErrorMessage(err)
 
-      // Write the error into the session's last assistant message so it
-      // is visible inline in the chat, not just in the error banner.
       const sessionNow = getSession(session.id)
       if (sessionNow) {
         const msgs = [...sessionNow.messages]

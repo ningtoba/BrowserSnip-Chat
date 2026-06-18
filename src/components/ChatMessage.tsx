@@ -1,6 +1,7 @@
 import ReactMarkdown from 'react-markdown'
 import remarkGfm from 'remark-gfm'
 import type { ChatMessage as ChatMessageType } from '../chat/types'
+import { ThinkingBlock } from './ThinkingBlock'
 import { User, Sparkles } from 'lucide-react'
 
 interface Props {
@@ -14,9 +15,14 @@ function formatTime(ts: number): string {
 
 export function ChatMessage({ message, isStreaming }: Props) {
   const isUser = message.role === 'user'
+  const isAssistant = message.role === 'assistant'
 
   return (
-    <div className={`animate-[fade-in_0.3s_ease-out] flex gap-3 px-4 py-3 ${isUser ? '' : 'bg-[#0d0f17]/70'}`}>
+    <div
+      className={`animate-[fade-in_0.3s_ease-out] flex gap-3 px-4 py-4 ${
+        isUser ? '' : 'bg-[#0d0f17]/70'
+      }`}
+    >
       {/* Avatar */}
       <div
         className={`flex h-7 w-7 shrink-0 items-center justify-center rounded-[6px] ${
@@ -30,7 +36,7 @@ export function ChatMessage({ message, isStreaming }: Props) {
 
       {/* Content */}
       <div className="min-w-0 flex-1">
-        <div className="mb-1 flex items-center gap-2">
+        <div className="mb-1.5 flex items-center gap-2">
           <span className="text-xs font-medium text-[#a8adc4]">
             {isUser ? 'You' : 'Assistant'}
           </span>
@@ -39,12 +45,21 @@ export function ChatMessage({ message, isStreaming }: Props) {
           </span>
         </div>
 
+        {/* Thinking block — only for assistant messages with reasoning */}
+        {isAssistant && message.reasoning && (
+          <ThinkingBlock
+            reasoning={message.reasoning}
+            isStreaming={!!isStreaming}
+          />
+        )}
+
+        {/* Main content */}
         <div className="message-content font-body text-sm leading-relaxed text-[#eeeff5]">
           {message.content ? (
             <ReactMarkdown remarkPlugins={[remarkGfm]}>
               {message.content}
             </ReactMarkdown>
-          ) : isStreaming ? (
+          ) : isStreaming && !message.reasoning ? (
             <span className="inline-flex items-center gap-1 text-[#5c6080] font-mono text-xs">
               Thinking
               <span className="animate-[pulse-dot_1.4s_ease-in-out_infinite]" style={{ animationDelay: '0s' }}>.</span>
