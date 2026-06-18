@@ -1,29 +1,32 @@
 import { useState, useCallback } from 'react'
+import { Prism as SyntaxHighlighter } from 'react-syntax-highlighter'
+import { oneDark } from 'react-syntax-highlighter/dist/esm/styles/prism'
 import { Copy, Check } from 'lucide-react'
 
 interface Props {
   language: string
-  children: React.ReactNode
+  code: string
 }
 
-export function CodeBlock({ language, children }: Props) {
+export function CodeBlock({ language, code }: Props) {
   const [copied, setCopied] = useState(false)
-
-  const rawCode = extractRawText(children)
 
   const handleCopy = useCallback(async () => {
     try {
-      await navigator.clipboard.writeText(rawCode)
+      await navigator.clipboard.writeText(code)
       setCopied(true)
       setTimeout(() => setCopied(false), 2000)
     } catch {
       // clipboard unavailable
     }
-  }, [rawCode])
+  }, [code])
+
+  // Map common aliases to Prism language names
+  const lang = normalizeLanguage(language)
 
   return (
-    <div className="relative my-2 rounded-lg border border-[#1e2035] bg-[#0d0f17] overflow-hidden">
-      {/* Header bar — always visible */}
+    <div className="relative my-2 rounded-lg border border-[#1e2035] overflow-hidden">
+      {/* Header bar */}
       <div className="flex items-center justify-between border-b border-[#1e2035] bg-[#11131c] px-3 py-1.5">
         <span className="font-mono text-[11px] text-[#5c6080] uppercase tracking-wide">
           {language}
@@ -47,21 +50,47 @@ export function CodeBlock({ language, children }: Props) {
         </button>
       </div>
 
-      {/* Highlighted code — children have hljs-* spans from rehype-highlight */}
-      <pre className="m-0 overflow-x-auto p-3 font-mono text-[0.8125rem]">
-        <code className="hljs">{children}</code>
-      </pre>
+      {/* Syntax highlighted code */}
+      <SyntaxHighlighter
+        language={lang}
+        style={oneDark}
+        customStyle={{
+          margin: 0,
+          padding: '0.75rem 1rem',
+          background: '#0d0f17',
+          fontSize: '0.8125rem',
+          lineHeight: 1.55,
+          borderRadius: 0,
+        }}
+        codeTagProps={{
+          style: {
+            fontFamily: "'JetBrains Mono', 'SF Mono', ui-monospace, Menlo, monospace",
+          },
+        }}
+      >
+        {code}
+      </SyntaxHighlighter>
     </div>
   )
 }
 
-function extractRawText(node: React.ReactNode): string {
-  if (typeof node === 'string') return node
-  if (typeof node === 'number' || typeof node === 'boolean') return String(node)
-  if (Array.isArray(node)) return node.map(extractRawText).join('')
-  if (node && typeof node === 'object' && 'props' in node) {
-    const props = (node as { props: Record<string, unknown> }).props
-    if (props.children) return extractRawText(props.children as React.ReactNode)
+function normalizeLanguage(lang: string): string {
+  const aliases: Record<string, string> = {
+    py: 'python',
+    js: 'javascript',
+    ts: 'typescript',
+    jsx: 'jsx',
+    tsx: 'tsx',
+    rb: 'ruby',
+    yml: 'yaml',
+    sh: 'bash',
+    zsh: 'bash',
+    kt: 'kotlin',
+    kts: 'kotlin',
+    txt: 'text',
+    text: 'text',
+    plaintext: 'text',
+    '': 'text',
   }
-  return ''
+  return aliases[lang] || lang
 }

@@ -88,8 +88,7 @@ function PreBlock({ children }: ComponentProps<'pre'>) {
 }
 
 function CodeRenderer({ className, children, ...props }: ComponentProps<'code'>) {
-  // rehypeHighlight adds 'hljs' to every fenced code block.
-  // Inline code never has the hljs class.
+  // rehypeHighlight adds 'hljs' to every fenced code block. Inline code never has it.
   if (!className?.includes('hljs')) {
     return (
       <code className={className} {...props}>
@@ -100,6 +99,17 @@ function CodeRenderer({ className, children, ...props }: ComponentProps<'code'>)
 
   const match = /language-(\w+)/.exec(className || '')
   const language = match ? match[1] : 'text'
+  const raw = extractText(children)
 
-  return <CodeBlock language={language}>{children}</CodeBlock>
+  return <CodeBlock language={language} code={raw} />
+}
+
+function extractText(node: React.ReactNode): string {
+  if (typeof node === 'string') return node
+  if (typeof node === 'number' || typeof node === 'boolean') return String(node)
+  if (Array.isArray(node)) return node.map(extractText).join('')
+  if (node && typeof node === 'object' && 'props' in node) {
+    return extractText((node as { props: { children?: React.ReactNode } }).props.children)
+  }
+  return ''
 }

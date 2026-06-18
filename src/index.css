@@ -1,5 +1,4 @@
 @import 'tailwindcss';
-@import 'highlight.js/styles/github-dark.css';
 
 /* ── BrowserSnip Design Tokens ── */
 @theme {
@@ -341,8 +340,6 @@
   overflow-x: auto;
 }
 
-/* Syntax highlighting — blend github-dark theme into BrowserSnip palette */
-.message-content .hljs { color: #c9d1d9; background: transparent; }
 
 /* ── Utilities ── */
 @layer utilities {
