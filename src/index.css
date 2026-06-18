@@ -1,4 +1,5 @@
 @import 'tailwindcss';
+@import 'highlight.js/styles/github-dark.css';
 
 /* ── BrowserSnip Design Tokens ── */
 @theme {
@@ -321,7 +322,7 @@
   background: rgba(17, 19, 28, 0.5);
 }
 
-/* Inline code only — fenced blocks use the CodeBlock component */
+/* Inline code */
 .message-content :not(pre) > code {
   font-family: 'JetBrains Mono', 'SF Mono', ui-monospace, Menlo, monospace;
   font-size: 0.8125rem;
@@ -331,13 +332,17 @@
   border: 1px solid #1e2035;
   color: #a5b4fc;
 }
-/* Plain pre blocks (without CodeBlock wrapper — rarely used) */
+/* Pre blocks inside the message area */
 .message-content pre {
   font-family: 'JetBrains Mono', 'SF Mono', ui-monospace, Menlo, monospace;
   font-size: 0.8125rem;
   line-height: 1.6;
   margin: 0.5em 0;
   overflow-x: auto;
+}
+/* Override highlight.js background — the PreWithCopy wrapper provides it */
+.message-content .hljs {
+  background: transparent;
 }
 
 
