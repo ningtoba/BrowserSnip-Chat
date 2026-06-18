@@ -26,7 +26,7 @@ export function ChatWindow({ messages, isStreaming, error, onSend, onStop, disab
       {/* Messages area */}
       <div className="flex-1 overflow-y-auto">
         {messages.length === 0 && !error ? (
-          <div className="flex h-full items-center justify-center">
+          <div className="flex h-full items-center justify-center px-4">
             <div className="max-w-md text-center animate-[doodle-pop_0.35s_cubic-bezier(0.34,1.56,0.64,1)]">
               <div className="mx-auto mb-4 flex h-16 w-16 items-center justify-center rounded-[10px] bg-[#6366f1]/10 shadow-[0_0_20px_rgba(99,102,241,0.15)]">
                 <svg
@@ -52,7 +52,7 @@ export function ChatWindow({ messages, isStreaming, error, onSend, onStop, disab
             </div>
           </div>
         ) : (
-          <div>
+          <div className="mx-auto max-w-3xl py-2">
             {messages.map((msg, i) => (
               <ChatMessage
                 key={msg.id}
@@ -61,9 +61,9 @@ export function ChatWindow({ messages, isStreaming, error, onSend, onStop, disab
               />
             ))}
 
-            {/* Inline error card — shown between messages and input */}
+            {/* Inline error card */}
             {error && (
-              <div className="mx-4 mt-3 animate-[fade-in_0.3s_ease-out]">
+              <div className="px-4 mt-3 animate-[fade-in_0.3s_ease-out]">
                 <div className="doodle-section border-[#f87171]/30 bg-[#f87171]/5">
                   <div className="flex items-start gap-3">
                     <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-[6px] bg-[#f87171]/15">

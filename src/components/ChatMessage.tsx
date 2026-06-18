@@ -16,13 +16,10 @@ function formatTime(ts: number): string {
 export function ChatMessage({ message, isStreaming }: Props) {
   const isUser = message.role === 'user'
   const isAssistant = message.role === 'assistant'
+  const hasReasoning = !!message.reasoning
 
   return (
-    <div
-      className={`animate-[fade-in_0.3s_ease-out] flex gap-3 px-4 py-4 ${
-        isUser ? '' : 'bg-[#0d0f17]/70'
-      }`}
-    >
+    <div className={`animate-[fade-in_0.3s_ease-out] flex gap-3 px-4 py-4 ${isAssistant ? 'bg-[#0d0f17]/70' : ''}`}>
       {/* Avatar */}
       <div
         className={`flex h-7 w-7 shrink-0 items-center justify-center rounded-[6px] ${
@@ -45,29 +42,30 @@ export function ChatMessage({ message, isStreaming }: Props) {
           </span>
         </div>
 
-        {/* Thinking block — only for assistant messages with reasoning */}
-        {isAssistant && message.reasoning && (
+        {/* Thinking block — shows when the model produced reasoning */}
+        {isAssistant && hasReasoning && (
           <ThinkingBlock
-            reasoning={message.reasoning}
-            isStreaming={!!isStreaming}
+            reasoning={message.reasoning!}
+            isStreaming={!!isStreaming && !message.content}
           />
         )}
 
         {/* Main content */}
-        <div className="message-content font-body text-sm leading-relaxed text-[#eeeff5]">
-          {message.content ? (
+        {message.content ? (
+          <div className="message-content font-body text-sm leading-relaxed text-[#eeeff5]">
             <ReactMarkdown remarkPlugins={[remarkGfm]}>
               {message.content}
             </ReactMarkdown>
-          ) : isStreaming && !message.reasoning ? (
-            <span className="inline-flex items-center gap-1 text-[#5c6080] font-mono text-xs">
-              Thinking
-              <span className="animate-[pulse-dot_1.4s_ease-in-out_infinite]" style={{ animationDelay: '0s' }}>.</span>
-              <span className="animate-[pulse-dot_1.4s_ease-in-out_infinite]" style={{ animationDelay: '0.2s' }}>.</span>
-              <span className="animate-[pulse-dot_1.4s_ease-in-out_infinite]" style={{ animationDelay: '0.4s' }}>.</span>
-            </span>
-          ) : null}
-        </div>
+          </div>
+        ) : isStreaming && !hasReasoning ? (
+          // No reasoning and no text yet — show a subtle indicator
+          <span className="inline-flex items-center gap-1 text-[#5c6080] font-mono text-xs">
+            Thinking
+            <span className="animate-[pulse-dot_1.4s_ease-in-out_infinite]" style={{ animationDelay: '0s' }}>.</span>
+            <span className="animate-[pulse-dot_1.4s_ease-in-out_infinite]" style={{ animationDelay: '0.2s' }}>.</span>
+            <span className="animate-[pulse-dot_1.4s_ease-in-out_infinite]" style={{ animationDelay: '0.4s' }}>.</span>
+          </span>
+        ) : null}
       </div>
     </div>
   )
