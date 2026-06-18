@@ -1,10 +1,11 @@
 import { type ComponentProps } from 'react'
 import ReactMarkdown from 'react-markdown'
 import remarkGfm from 'remark-gfm'
-import rehypeHighlight from 'rehype-highlight'
+import { Prism as SyntaxHighlighter } from 'react-syntax-highlighter'
+import { oneDark } from 'react-syntax-highlighter/dist/esm/styles/prism'
 import type { ChatMessage as ChatMessageType } from '../chat/types'
 import { ThinkingBlock } from './ThinkingBlock'
-import { Copy, User, Sparkles } from 'lucide-react'
+import { User, Sparkles } from 'lucide-react'
 
 interface Props {
   message: ChatMessageType
@@ -57,8 +58,9 @@ export function ChatMessage({ message, isStreaming }: Props) {
           <div className="message-content font-body text-sm text-[#eeeff5]">
             <ReactMarkdown
               remarkPlugins={[remarkGfm]}
-              rehypePlugins={[rehypeHighlight]}
-              components={{ pre: PreWithCopy }}
+              components={{
+                code: FencedCode,
+              }}
             >
               {message.content}
             </ReactMarkdown>
@@ -76,31 +78,62 @@ export function ChatMessage({ message, isStreaming }: Props) {
   )
 }
 
-// ── Pre block wrapper — adds header bar + copy button around native output ──
+// ── Fenced code block with Prism highlighting + copy button ──
 
-function PreWithCopy({ children, ...preProps }: ComponentProps<'pre'>) {
-  // Extract language from className on the <code> child
-  const codeChild = extractCodeChild(children)
-  const codeProps = (codeChild?.props || {}) as Record<string, unknown>
-  const langClass = (codeProps.className as string) || ''
-  const match = /language-(\w+)/.exec(langClass)
-  const language = match ? match[1] : 'text'
-  const codeText = extractText(codeProps.children as React.ReactNode)
+function FencedCode({ className, children, ...props }: ComponentProps<'code'>) {
+  // remark adds "language-xxx" class from fenced code block syntax
+  const match = /language-(\w+)/.exec(className || '')
+  const language = match ? match[1] : ''
+  const isBlock = !!match
 
-  const handleCopy = async () => {
-    try {
-      await navigator.clipboard.writeText(codeText)
-      const btn = document.activeElement as HTMLElement | null
-      if (btn) {
-        const original = btn.innerHTML
-        btn.innerHTML = '<span style="color:#34d399">Copied!</span>'
-        setTimeout(() => { btn.innerHTML = original }, 2000)
-      }
-    } catch { /* noop */ }
+  // Inline code — no language class → render as is
+  if (!isBlock) {
+    return (
+      <code className={className} {...props}>
+        {children}
+      </code>
+    )
+  }
+
+  // Block code: get raw text from children.
+  // react-markdown passes the code as a string (or array of strings).
+  const raw = extractCodeText(children)
+  const lang = normalizeLanguage(language)
+
+  return <CodeBlock language={lang} code={raw} />
+}
+
+function extractCodeText(children: React.ReactNode): string {
+  if (typeof children === 'string') return children
+  if (typeof children === 'number') return String(children)
+  if (Array.isArray(children)) return children.map((c) => (typeof c === 'string' ? c : '')).join('')
+  return ''
+}
+
+function normalizeLanguage(lang: string): string {
+  const aliases: Record<string, string> = {
+    py: 'python', js: 'javascript', ts: 'typescript', jsx: 'jsx', tsx: 'tsx',
+    rb: 'ruby', yml: 'yaml', sh: 'bash', zsh: 'bash', zshrc: 'bash',
+    kt: 'kotlin', kts: 'kotlin', txt: 'text', text: 'text', plaintext: 'text',
+    '': 'text',
+  }
+  return aliases[lang] || lang
+}
+
+// ── Code block with header bar + copy button ──
+
+function CodeBlock({ language, code }: { language: string; code: string }) {
+  const handleCopy = (e: React.MouseEvent) => {
+    navigator.clipboard.writeText(code).catch(() => {})
+    const btn = e.currentTarget as HTMLElement
+    btn.innerHTML = '<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#34d399" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg><span style="color:#34d399">Copied</span>'
+    setTimeout(() => {
+      btn.innerHTML = '<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg><span>Copy</span>'
+    }, 2000)
   }
 
   return (
-    <div className="relative my-2 rounded-lg border border-[#1e2035] overflow-hidden">
+    <div className="my-2 rounded-lg border border-[#1e2035] overflow-hidden">
       <div className="flex items-center justify-between border-b border-[#1e2035] bg-[#11131c] px-3 py-1.5">
         <span className="font-mono text-[11px] text-[#5c6080] uppercase tracking-wide">
           {language}
@@ -110,36 +143,31 @@ function PreWithCopy({ children, ...preProps }: ComponentProps<'pre'>) {
           className="flex items-center gap-1.5 rounded-[4px] px-2 py-0.5 text-[11px] text-[#5c6080] transition-colors hover:bg-[#1e2035] hover:text-[#a8adc4]"
           title="Copy code"
         >
-          <Copy className="h-3 w-3" />
+          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+            <rect x="9" y="9" width="13" height="13" rx="2" ry="2"/>
+            <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/>
+          </svg>
           <span>Copy</span>
         </button>
       </div>
-      <pre {...preProps} className="m-0 overflow-x-auto p-3 font-mono text-[0.8125rem] leading-relaxed bg-[#0d0f17]">
-        {children}
-      </pre>
+      <SyntaxHighlighter
+        language={language}
+        style={oneDark}
+        customStyle={{
+          margin: 0,
+          padding: '0.75rem 1rem',
+          background: '#0d0f17',
+          fontSize: '0.8125rem',
+          lineHeight: 1.55,
+        }}
+        codeTagProps={{
+          style: {
+            fontFamily: "'JetBrains Mono', 'SF Mono', ui-monospace, Menlo, monospace",
+          },
+        }}
+      >
+        {code}
+      </SyntaxHighlighter>
     </div>
   )
-}
-
-function extractCodeChild(children: React.ReactNode): React.ReactElement | null {
-  if (!children) return null
-  if (Array.isArray(children)) {
-    for (const child of children) {
-      if (isReactElement(child) && child.type === 'code') return child
-    }
-  }
-  if (isReactElement(children) && children.type === 'code') return children
-  return null
-}
-
-function isReactElement(node: unknown): node is React.ReactElement {
-  return node !== null && typeof node === 'object' && 'type' in node && 'props' in node
-}
-
-function extractText(node: React.ReactNode): string {
-  if (typeof node === 'string') return node
-  if (typeof node === 'number' || typeof node === 'boolean') return String(node)
-  if (Array.isArray(node)) return node.map(extractText).join('')
-  if (isReactElement(node)) return extractText((node.props as Record<string, unknown>).children as React.ReactNode)
-  return ''
 }
