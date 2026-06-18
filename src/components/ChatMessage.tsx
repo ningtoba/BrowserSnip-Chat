@@ -59,7 +59,7 @@ export function ChatMessage({ message, isStreaming }: Props) {
           <div className="message-content font-body text-sm text-[#eeeff5]">
             <ReactMarkdown
               remarkPlugins={[remarkGfm]}
-              rehypePlugins={[rehypeHighlight, rehypeRaw]}
+              rehypePlugins={[rehypeRaw, rehypeHighlight]}
               components={{
                 pre: PreBlock,
                 code: CodeRenderer,
