@@ -48,7 +48,7 @@ export function CodeBlock({ language, children }: Props) {
       </div>
 
       {/* Highlighted code — children have hljs-* spans from rehype-highlight */}
-      <pre className="m-0 overflow-x-auto p-3 font-mono text-[0.8125rem] leading-relaxed">
+      <pre className="m-0 overflow-x-auto p-3 font-mono text-[0.8125rem]">
         <code className="hljs">{children}</code>
       </pre>
     </div>
