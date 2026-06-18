@@ -1,6 +1,4 @@
 import { useState } from 'react'
-import ReactMarkdown from 'react-markdown'
-import remarkGfm from 'remark-gfm'
 import { ChevronDown, Brain } from 'lucide-react'
 
 interface Props {
@@ -9,14 +7,12 @@ interface Props {
 }
 
 export function ThinkingBlock({ reasoning, isStreaming }: Props) {
-  // Always start collapsed — user clicks to expand
   const [isOpen, setIsOpen] = useState(false)
 
   if (!reasoning) return null
 
   return (
     <div className="mb-3 rounded-[6px] border border-[#1e2035] bg-[#0d0f17] overflow-hidden">
-      {/* Header — clickable toggle */}
       <button
         onClick={() => setIsOpen(!isOpen)}
         className="flex w-full items-center gap-2 px-3 py-2 text-left transition-colors hover:bg-[#11131c]"
@@ -32,16 +28,11 @@ export function ThinkingBlock({ reasoning, isStreaming }: Props) {
         />
       </button>
 
-      {/* Collapsible content */}
       {isOpen && (
-        <div className="border-t border-[#1e2035] px-3 py-2">
-          <div className="font-mono text-xs leading-relaxed text-[#5c6080] whitespace-pre-wrap break-words">
-            <div className="message-content">
-              <ReactMarkdown remarkPlugins={[remarkGfm]}>
-                {reasoning}
-              </ReactMarkdown>
-            </div>
-          </div>
+        <div className="border-t border-[#1e2035] px-3 py-2 max-h-64 overflow-y-auto">
+          <pre className="font-mono text-xs leading-relaxed text-[#5c6080] whitespace-pre-wrap break-words m-0">
+            {reasoning}
+          </pre>
         </div>
       )}
     </div>

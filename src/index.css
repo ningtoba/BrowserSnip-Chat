@@ -255,21 +255,73 @@
 }
 
 /* ── Markdown content ── */
+.message-content {
+  word-break: break-word;
+}
+.message-content > *:first-child { margin-top: 0; }
+.message-content > *:last-child { margin-bottom: 0; }
+
+.message-content h1 { font-size: 1.5em; font-weight: 600; margin: 0.75em 0 0.5em; color: #eeeff5; }
+.message-content h2 { font-size: 1.3em; font-weight: 600; margin: 0.75em 0 0.5em; color: #eeeff5; }
+.message-content h3 { font-size: 1.15em; font-weight: 600; margin: 0.75em 0 0.5em; color: #eeeff5; }
+.message-content h4 { font-size: 1em; font-weight: 600; margin: 0.75em 0 0.5em; color: #eeeff5; }
+
 .message-content p {
   margin: 0.25em 0;
+  line-height: 1.65;
 }
-.message-content p:first-child { margin-top: 0; }
-.message-content p:last-child { margin-bottom: 0; }
-.message-content pre {
-  background: #0d0f17;
+
+.message-content a {
+  color: #818cf8;
+  text-decoration: underline;
+}
+
+.message-content strong { color: #eeeff5; font-weight: 600; }
+
+.message-content ul, .message-content ol {
+  padding-left: 1.5em;
+  margin: 0.25em 0;
+}
+.message-content li { margin: 0.125em 0; }
+
+.message-content blockquote {
+  border-left: 3px solid #6366f1;
+  padding: 0.25em 1em;
+  margin: 0.5em 0;
+  color: #a8adc4;
+  background: rgba(99, 102, 241, 0.05);
+}
+
+.message-content hr {
+  border: none;
+  border-top: 1px solid #1e2035;
+  margin: 1em 0;
+}
+
+/* Tables */
+.message-content table {
+  border-collapse: collapse;
+  width: 100%;
+  margin: 0.5em 0;
+  font-size: 0.875em;
+}
+.message-content th {
+  background: #161922;
   border: 1px solid #1e2035;
-  border-radius: 6px;
-  padding: 1em;
-  overflow-x: auto;
-  font-family: 'JetBrains Mono', 'SF Mono', ui-monospace, Menlo, monospace;
-  font-size: 0.8125rem;
-  line-height: 1.6;
+  padding: 0.5em 0.75em;
+  text-align: left;
+  font-weight: 600;
+  color: #a8adc4;
 }
+.message-content td {
+  border: 1px solid #1e2035;
+  padding: 0.4em 0.75em;
+}
+.message-content tr:nth-child(even) td {
+  background: rgba(17, 19, 28, 0.5);
+}
+
+/* Code */
 .message-content code {
   font-family: 'JetBrains Mono', 'SF Mono', ui-monospace, Menlo, monospace;
   font-size: 0.8125rem;
@@ -281,13 +333,50 @@
   border: 1px solid #1e2035;
   color: #a5b4fc;
 }
-.message-content ul, .message-content ol {
-  padding-left: 1.5em;
+.message-content pre {
+  background: #0d0f17;
+  border: 1px solid #1e2035;
+  border-radius: 8px;
+  padding: 1em;
+  overflow-x: auto;
+  font-family: 'JetBrains Mono', 'SF Mono', ui-monospace, Menlo, monospace;
+  font-size: 0.8125rem;
+  line-height: 1.6;
+  margin: 0.5em 0;
 }
-.message-content a {
-  color: #818cf8;
-  text-decoration: underline;
+.message-content pre code {
+  background: none;
+  border: none;
+  padding: 0;
+  color: #a8adc4;
+  font-size: inherit;
 }
+
+/* Syntax highlighting — hljs overrides for dark theme */
+.message-content .hljs-keyword { color: #c792ea; }
+.message-content .hljs-string { color: #c3e88d; }
+.message-content .hljs-number { color: #f78c6c; }
+.message-content .hljs-comment { color: #5c6080; font-style: italic; }
+.message-content .hljs-function { color: #82aaff; }
+.message-content .hljs-title { color: #82aaff; }
+.message-content .hljs-type { color: #ffcb6b; }
+.message-content .hljs-literal { color: #f78c6c; }
+.message-content .hljs-built_in { color: #82aaff; }
+.message-content .hljs-attr { color: #ffcb6b; }
+.message-content .hljs-property { color: #82aaff; }
+.message-content .hljs-variable { color: #eeeff5; }
+.message-content .hljs-params { color: #eeeff5; }
+.message-content .hljs-meta { color: #89ddff; }
+.message-content .hljs-tag { color: #f07178; }
+.message-content .hljs-name { color: #f07178; }
+.message-content .hljs-attr { color: #ffcb6b; }
+.message-content .hljs-selector-class { color: #ffcb6b; }
+.message-content .hljs-selector-tag { color: #f07178; }
+.message-content .hljs-section { color: #82aaff; }
+.message-content .hljs-punctuation { color: #89ddff; }
+.message-content .hljs-regexp { color: #c3e88d; }
+.message-content .hljs-deletion { color: #f07178; }
+.message-content .hljs-addition { color: #c3e88d; }
 
 /* ── Utilities ── */
 @layer utilities {

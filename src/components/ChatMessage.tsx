@@ -1,5 +1,7 @@
 import ReactMarkdown from 'react-markdown'
 import remarkGfm from 'remark-gfm'
+import rehypeHighlight from 'rehype-highlight'
+import rehypeRaw from 'rehype-raw'
 import type { ChatMessage as ChatMessageType } from '../chat/types'
 import { ThinkingBlock } from './ThinkingBlock'
 import { User, Sparkles } from 'lucide-react'
@@ -19,8 +21,11 @@ export function ChatMessage({ message, isStreaming }: Props) {
   const hasReasoning = !!message.reasoning
 
   return (
-    <div className={`animate-[fade-in_0.3s_ease-out] flex gap-3 px-4 py-4 ${isAssistant ? 'bg-[#0d0f17]/70' : ''}`}>
-      {/* Avatar */}
+    <div
+      className={`animate-[fade-in_0.3s_ease-out] flex gap-3 px-4 py-4 ${
+        isAssistant ? 'bg-[#0d0f17]/70' : ''
+      }`}
+    >
       <div
         className={`flex h-7 w-7 shrink-0 items-center justify-center rounded-[6px] ${
           isUser
@@ -31,7 +36,6 @@ export function ChatMessage({ message, isStreaming }: Props) {
         {isUser ? <User className="h-4 w-4" /> : <Sparkles className="h-4 w-4" />}
       </div>
 
-      {/* Content */}
       <div className="min-w-0 flex-1">
         <div className="mb-1.5 flex items-center gap-2">
           <span className="text-xs font-medium text-[#a8adc4]">
@@ -42,7 +46,7 @@ export function ChatMessage({ message, isStreaming }: Props) {
           </span>
         </div>
 
-        {/* Thinking block — shows when the model produced reasoning */}
+        {/* Thinking block */}
         {isAssistant && hasReasoning && (
           <ThinkingBlock
             reasoning={message.reasoning!}
@@ -52,13 +56,15 @@ export function ChatMessage({ message, isStreaming }: Props) {
 
         {/* Main content */}
         {message.content ? (
-          <div className="message-content font-body text-sm leading-relaxed text-[#eeeff5]">
-            <ReactMarkdown remarkPlugins={[remarkGfm]}>
+          <div className="message-content font-body text-sm text-[#eeeff5]">
+            <ReactMarkdown
+              remarkPlugins={[remarkGfm]}
+              rehypePlugins={[rehypeHighlight, rehypeRaw]}
+            >
               {message.content}
             </ReactMarkdown>
           </div>
         ) : isStreaming && !hasReasoning ? (
-          // No reasoning and no text yet — show a subtle indicator
           <span className="inline-flex items-center gap-1 text-[#5c6080] font-mono text-xs">
             Thinking
             <span className="animate-[pulse-dot_1.4s_ease-in-out_infinite]" style={{ animationDelay: '0s' }}>.</span>
