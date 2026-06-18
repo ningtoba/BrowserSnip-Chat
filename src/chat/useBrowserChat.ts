@@ -2,7 +2,7 @@ import { useState, useCallback, useRef } from 'react'
 import { streamText } from 'ai'
 import type { ChatMessage, ChatSession } from './types'
 import type { ProviderConfig } from '../providers/types'
-import { createModel } from '../providers/factory'
+import { createModel, getReasoningProviderOptions } from '../providers/factory'
 import {
   getSessions,
   getActiveSessionId,
@@ -157,6 +157,8 @@ export function useBrowserChat(): UseBrowserChatReturn {
         model,
         messages: modelMessages,
         abortSignal: abortController.signal,
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        providerOptions: getReasoningProviderOptions(session.providerConfig.providerId) as any,
       })
 
       let fullText = ''

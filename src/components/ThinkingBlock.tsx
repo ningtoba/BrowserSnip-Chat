@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react'
+import { useState } from 'react'
 import ReactMarkdown from 'react-markdown'
 import remarkGfm from 'remark-gfm'
 import { ChevronDown, Brain } from 'lucide-react'
@@ -9,14 +9,8 @@ interface Props {
 }
 
 export function ThinkingBlock({ reasoning, isStreaming }: Props) {
-  // Auto-expand while streaming, collapse when done
-  const [isOpen, setIsOpen] = useState(isStreaming)
-
-  useEffect(() => {
-    if (isStreaming) {
-      setIsOpen(true)
-    }
-  }, [isStreaming])
+  // Always start collapsed — user clicks to expand
+  const [isOpen, setIsOpen] = useState(false)
 
   if (!reasoning) return null
 

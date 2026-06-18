@@ -113,3 +113,67 @@ export function createModel(config: ProviderConfig): LanguageModel {
       throw new Error(`Unknown provider: ${providerId}`)
   }
 }
+
+/**
+ * Returns provider-specific options to enable reasoning/thinking.
+ * Each provider has its own mechanism for controlling thinking output —
+ * we set sensible defaults so reasoning chunks flow through fullStream
+ * whenever the model supports it.
+ */
+export function getReasoningProviderOptions(providerId: string): Record<string, unknown> | undefined {
+  switch (providerId) {
+    // Google: Gemini 2.5+ requires thinkingConfig to emit thoughts.
+    // thinkingBudget controls token allocation; includeThoughts makes
+    // them visible as reasoning-delta chunks in fullStream.
+    case 'google':
+      return {
+        google: {
+          thinkingConfig: {
+            thinkingBudget: 8192,
+            includeThoughts: true,
+          },
+        },
+      }
+
+    // Anthropic: Claude models with extended thinking.
+    // budgetTokens controls how many tokens the model can use for
+    // internal reasoning before producing the final answer.
+    case 'anthropic':
+      return {
+        anthropic: {
+          thinking: {
+            type: 'enabled',
+            budgetTokens: 8192,
+          },
+        },
+      }
+
+    // OpenAI: reasoning models (o-series, gpt-5).
+    // reasoningEffort controls how hard the model tries to reason.
+    case 'openai':
+      return {
+        openai: {
+          reasoningEffort: 'medium',
+        },
+      }
+
+    // DeepSeek: R1 reasoning model. Uses OpenAI-compatible reasoning.
+    case 'deepseek':
+      return {
+        deepseek: {
+          reasoningEffort: 'medium',
+        },
+      }
+
+    // These providers forward to models that may support reasoning
+    // (e.g. OpenRouter can route to Anthropic/Google models).
+    // Pass through — the upstream provider handles the options.
+    case 'openrouter':
+    case 'bedrock':
+      return undefined
+
+    // No reasoning API for these providers (or not yet known).
+    default:
+      return undefined
+  }
+}
