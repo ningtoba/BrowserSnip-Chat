@@ -321,35 +321,23 @@
   background: rgba(17, 19, 28, 0.5);
 }
 
-/* Code */
-.message-content code {
+/* Inline code only — fenced blocks use the CodeBlock component */
+.message-content :not(pre) > code {
   font-family: 'JetBrains Mono', 'SF Mono', ui-monospace, Menlo, monospace;
   font-size: 0.8125rem;
-}
-.message-content :not(pre) > code {
   background: #161922;
   padding: 0.15em 0.4em;
   border-radius: 4px;
   border: 1px solid #1e2035;
   color: #a5b4fc;
 }
+/* Plain pre blocks (without CodeBlock wrapper — rarely used) */
 .message-content pre {
-  background: #0d0f17;
-  border: 1px solid #1e2035;
-  border-radius: 8px;
-  padding: 1em;
-  overflow-x: auto;
   font-family: 'JetBrains Mono', 'SF Mono', ui-monospace, Menlo, monospace;
   font-size: 0.8125rem;
   line-height: 1.6;
   margin: 0.5em 0;
-}
-.message-content pre code {
-  background: none;
-  border: none;
-  padding: 0;
-  color: #a8adc4;
-  font-size: inherit;
+  overflow-x: auto;
 }
 
 /* Syntax highlighting — hljs overrides for dark theme */
