@@ -55,7 +55,7 @@ export function ChatMessage({ message, isStreaming }: Props) {
         )}
 
         {message.content ? (
-          <div className="font-body text-sm text-[#eeeff5]">
+          <div className="font-body text-[15px] leading-relaxed text-[#eeeff5]">
             <ReactMarkdown
               remarkPlugins={[remarkGfm]}
               components={{
@@ -70,7 +70,7 @@ export function ChatMessage({ message, isStreaming }: Props) {
                   }
 
                   return (
-                    <code className="font-mono text-[0.8125rem] bg-[#161922] px-1 py-0.5 rounded border border-[#1e2035] text-[#a5b4fc]" {...props}>
+                    <code className="font-mono text-[0.85em] bg-[#161922] px-1 py-0.5 rounded border border-[#1e2035] text-[#a5b4fc]" {...props}>
                       {children}
                     </code>
                   )
@@ -127,7 +127,7 @@ function CodeBlock({ language, code }: { language: string; code: string }) {
           margin: 0,
           padding: '0.75rem 1rem',
           background: '#0d0f17',
-          fontSize: '0.8125rem',
+          fontSize: '0.85rem',
           lineHeight: 1.55,
         }}
         codeTagProps={{

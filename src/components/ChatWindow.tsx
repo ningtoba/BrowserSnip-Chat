@@ -16,15 +16,26 @@ interface Props {
 
 export function ChatWindow({ messages, isStreaming, error, onSend, onStop, disabled, onDismissError }: Props) {
   const bottomRef = useRef<HTMLDivElement>(null)
+  const scrollContainerRef = useRef<HTMLDivElement>(null)
 
   useEffect(() => {
-    bottomRef.current?.scrollIntoView({ behavior: 'smooth' })
+    const el = scrollContainerRef.current
+    if (!el) return
+
+    // Only auto-scroll if the user is already near the bottom.
+    // If they've scrolled up to read, don't yank them back down.
+    const threshold = 80 // px from bottom
+    const isNearBottom = el.scrollHeight - el.scrollTop - el.clientHeight < threshold
+
+    if (isNearBottom) {
+      el.scrollTop = el.scrollHeight
+    }
   }, [messages, error])
 
   return (
     <div className="flex h-full flex-col bg-[#0a0b10]">
       {/* Messages area */}
-      <div className="flex-1 overflow-y-auto">
+      <div ref={scrollContainerRef} className="flex-1 overflow-y-auto">
         {messages.length === 0 && !error ? (
           <div className="flex h-full items-center justify-center px-4">
             <div className="max-w-md text-center animate-[doodle-pop_0.35s_cubic-bezier(0.34,1.56,0.64,1)]">
@@ -46,7 +57,7 @@ export function ChatWindow({ messages, isStreaming, error, onSend, onStop, disab
               <h2 className="font-display text-lg font-medium text-[#eeeff5]">
                 Start a conversation
               </h2>
-              <p className="mt-1 text-sm text-[#a8adc4]">
+              <p className="mt-1 text-[15px] text-[#a8adc4]">
                 Type a message below to begin chatting with the AI.
               </p>
             </div>

@@ -54,7 +54,7 @@ export function ChatInput({ onSend, onStop, isStreaming, disabled }: Props) {
             placeholder={disabled ? 'Configure a provider to start…' : 'Type a message…'}
             disabled={disabled}
             rows={1}
-            className="doodle-input resize-none !rounded-[10px] !py-2.5 !px-4 !font-body"
+            className="doodle-input resize-none !rounded-[10px] !py-2.5 !px-4 !font-body !text-[15px]"
           />
         </div>
 
