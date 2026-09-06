@@ -1,8 +1,10 @@
 import { useState } from 'react'
+import { motion } from 'framer-motion'
 import { PROVIDERS, getProvider } from '../providers'
 import type { ProviderConfig, ProviderModel } from '../providers/types'
 import { fetchModels } from '../providers/model-fetch'
 import { saveLastProviderConfig } from '../chat/session-store'
+import { fadeUp, scaleIn, staggerParent, tapDown } from '../lib/motion'
 import { ExternalLink, Key, Zap, RefreshCw, CheckCircle2, AlertCircle } from 'lucide-react'
 
 interface Props {
@@ -127,47 +129,71 @@ export function ProviderSetup({ onConfigured, initialConfig }: Props) {
   }
 
   return (
-    <div className="flex h-full items-center justify-center bg-cream p-6">
-      <div className="w-full max-w-lg animate-[doodle-pop_0.25s_cubic-bezier(0.16,1,0.3,1)]">
+    <div className="flex h-full items-center justify-center overflow-y-auto bg-cream p-6">
+      <motion.div
+        variants={staggerParent}
+        initial="hidden"
+        animate="visible"
+        className="w-full max-w-lg"
+      >
         {/* Header */}
-        <div className="mb-8 text-center">
-          <div className="mx-auto mb-4 flex h-12 w-12 items-center justify-center rounded-doodle-md border border-cream-border bg-cream-light shadow-glow">
+        <motion.div variants={fadeUp} className="mb-8 text-center">
+          <motion.div
+            variants={scaleIn}
+            className="mx-auto mb-5 flex h-12 w-12 items-center justify-center rounded-doodle-lg border border-cream-border bg-cream-light shadow-glow"
+          >
             <Zap className="h-6 w-6 text-accent" />
-          </div>
-          <h1 className="font-display text-2xl font-semibold tracking-tight text-ink">
+          </motion.div>
+          <p className="text-[11px] font-semibold uppercase tracking-[0.12em] text-accent">
+            Setup
+          </p>
+          <h1 className="mt-1.5 font-display text-3xl font-semibold tracking-[-0.03em] text-ink">
             BrowserSnip Chat
           </h1>
           <p className="mt-2 text-sm text-ink-soft">
-            Configure your AI provider to get started
+            Connect a provider — your key never leaves this browser.
           </p>
-        </div>
+        </motion.div>
 
+        <motion.div variants={fadeUp}>
         <form
           onSubmit={handleSubmit}
-          className="doodle-section space-y-5"
+          className="doodle-section rounded-doodle-lg space-y-5"
         >
-          {/* Provider Select */}
+          {/* Provider grid */}
           <div>
-            <label className="mb-1.5 block text-sm font-medium text-ink-soft">
+            <label className="mb-2 block text-sm font-medium text-ink-soft">
               Provider
             </label>
-            <select
-              value={selectedProviderId}
-              onChange={(e) => handleProviderChange(e.target.value)}
-              className="doodle-select"
+            <motion.div
+              variants={staggerParent}
+              initial="hidden"
+              animate="visible"
+              className="grid grid-cols-3 gap-1.5"
             >
-              <option value="">Select a provider…</option>
               {PROVIDERS.map((p) => (
-                <option key={p.id} value={p.id}>
+                <motion.button
+                  key={p.id}
+                  type="button"
+                  variants={scaleIn}
+                  whileTap={tapDown}
+                  onClick={() => handleProviderChange(p.id)}
+                  title={p.name}
+                  className={`truncate rounded-doodle border px-2 py-1.5 text-xs font-medium transition-colors ${
+                    p.id === selectedProviderId
+                      ? 'border-accent/25 bg-accent/8 text-accent'
+                      : 'border-cream-border bg-cream-light text-ink-soft hover:border-[#B9B9AF] hover:bg-cream-soft hover:text-ink'
+                  }`}
+                >
                   {p.name}
-                </option>
+                </motion.button>
               ))}
-            </select>
+            </motion.div>
           </div>
 
           {/* API Key */}
           {provider && (provider.requiresApiKey || provider.id === 'custom') && (
-            <div>
+            <motion.div variants={fadeUp}>
               <div className="mb-1.5 flex items-center justify-between">
                 <label className="text-sm font-medium text-ink-soft">
                   {provider.apiKeyLabel}
@@ -200,12 +226,12 @@ export function ProviderSetup({ onConfigured, initialConfig }: Props) {
                   {showApiKey ? 'Hide' : 'Show'}
                 </button>
               </div>
-            </div>
+            </motion.div>
           )}
 
           {/* Extra fields (Bedrock, Azure, custom base URL) */}
           {provider?.extraFields?.map((field) => (
-            <div key={field.name}>
+            <motion.div key={field.name} variants={fadeUp}>
               <label className="mb-1.5 block text-sm font-medium text-ink-soft">
                 {field.label}
               </label>
@@ -219,12 +245,12 @@ export function ProviderSetup({ onConfigured, initialConfig }: Props) {
               {field.helpText && (
                 <p className="mt-1 text-xs text-ink-muted">{field.helpText}</p>
               )}
-            </div>
+            </motion.div>
           ))}
 
           {/* Base URL for OpenAI-compatible providers */}
           {provider?.isOpenAICompatible && provider.id !== 'openrouter' && provider.id !== 'ollama' && provider.id !== 'lmstudio' && (
-            <div>
+            <motion.div variants={fadeUp}>
               <label className="mb-1.5 block text-sm font-medium text-ink-soft">
                 Base URL
               </label>
@@ -235,12 +261,12 @@ export function ProviderSetup({ onConfigured, initialConfig }: Props) {
                 placeholder="https://api.example.com/v1"
                 className="doodle-input"
               />
-            </div>
+            </motion.div>
           )}
 
           {/* Fetch Models Button */}
           {provider && (
-            <div>
+            <motion.div variants={fadeUp}>
               <button
                 type="button"
                 onClick={handleFetchModels}
@@ -285,17 +311,26 @@ export function ProviderSetup({ onConfigured, initialConfig }: Props) {
 
               {/* Fetch error */}
               {fetchStatus === 'error' && fetchError && (
-                <div className="mt-2 flex items-start gap-2 rounded-doodle border border-danger/20 bg-danger/10 px-3 py-2">
+                <motion.div
+                  initial={{ opacity: 0, y: 6 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ duration: 0.2 }}
+                  className="mt-2 flex items-start gap-2 rounded-doodle border border-danger/20 bg-danger/10 px-3 py-2"
+                >
                   <AlertCircle className="mt-0.5 h-4 w-4 shrink-0 text-danger" />
                   <p className="text-xs text-danger">{fetchError}</p>
-                </div>
+                </motion.div>
               )}
-            </div>
+            </motion.div>
           )}
 
           {/* Model dropdown — only after successful fetch with models */}
           {hasFetchedModels && (
-            <div className="animate-[fade-in_0.3s_ease-out]">
+            <motion.div
+              initial={{ opacity: 0, y: 8 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.25, ease: [0.16, 1, 0.3, 1] }}
+            >
               <label className="mb-1.5 block text-sm font-medium text-ink-soft">
                 Model
               </label>
@@ -323,12 +358,16 @@ export function ProviderSetup({ onConfigured, initialConfig }: Props) {
                   autoFocus
                 />
               )}
-            </div>
+            </motion.div>
           )}
 
           {/* Custom model input — after successful fetch but no models returned (e.g. Anthropic) */}
           {fetchStatus === 'success' && fetchedModels !== null && fetchedModels.length === 0 && (
-            <div className="animate-[fade-in_0.3s_ease-out]">
+            <motion.div
+              initial={{ opacity: 0, y: 8 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.25, ease: [0.16, 1, 0.3, 1] }}
+            >
               <label className="mb-1.5 block text-sm font-medium text-ink-soft">
                 Model Name
               </label>
@@ -342,7 +381,7 @@ export function ProviderSetup({ onConfigured, initialConfig }: Props) {
               <p className="mt-1 text-xs text-ink-muted">
                 This provider does not expose a model list. Enter the model name manually.
               </p>
-            </div>
+            </motion.div>
           )}
 
           <button
@@ -353,7 +392,8 @@ export function ProviderSetup({ onConfigured, initialConfig }: Props) {
             Start Chatting
           </button>
         </form>
-      </div>
+        </motion.div>
+      </motion.div>
     </div>
   )
 }

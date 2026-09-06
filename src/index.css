@@ -19,8 +19,18 @@
   --color-warn: #D97706;
   --color-danger: #DC2626;
 
+  /* v3 "Studio" category accent set — icon tiles, eyebrows, active indicators only */
+  --color-accent-violet: #7C3AED;
+  --color-accent-emerald: #059669;
+  --color-accent-amber: #D97706;
+  --color-accent-rose: #E11D48;
+  --color-accent-violet-tint: rgba(124, 58, 237, 0.08);
+  --color-accent-emerald-tint: rgba(5, 150, 105, 0.08);
+  --color-accent-amber-tint: rgba(217, 119, 6, 0.08);
+  --color-accent-rose-tint: rgba(225, 29, 72, 0.07);
+
   --font-mono: 'JetBrains Mono', 'SF Mono', ui-monospace, Menlo, monospace;
-  --font-display: Inter, -apple-system, BlinkMacSystemFont, 'SF Pro Display', system-ui, sans-serif;
+  --font-display: 'Space Grotesk', Inter, -apple-system, BlinkMacSystemFont, 'SF Pro Display', system-ui, sans-serif;
   --font-body: Inter, -apple-system, BlinkMacSystemFont, 'SF Pro Text', 'Segoe UI', system-ui, sans-serif;
 
   --radius-doodle: 8px;
@@ -118,6 +128,24 @@
 @keyframes pulse-dot {
   0%, 100% { opacity: 0.3; }
   50% { opacity: 1; }
+}
+@keyframes caret-blink {
+  0%, 45% { opacity: 1; }
+  50%, 95% { opacity: 0; }
+  100% { opacity: 1; }
+}
+
+/* Streaming caret — thin accent bar trailing the last token of the message */
+.streaming-tail > *:last-child::after {
+  content: '';
+  display: inline-block;
+  width: 2px;
+  height: 1em;
+  margin-left: 2px;
+  vertical-align: text-bottom;
+  background: #2563EB;
+  border-radius: 1px;
+  animation: caret-blink 1s step-end infinite;
 }
 
 /* ── Components ── */

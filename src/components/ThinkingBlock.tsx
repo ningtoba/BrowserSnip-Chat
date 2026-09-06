@@ -1,4 +1,5 @@
 import { useState } from 'react'
+import { AnimatePresence, motion } from 'framer-motion'
 import { ChevronDown, Brain } from 'lucide-react'
 
 interface Props {
@@ -28,13 +29,22 @@ export function ThinkingBlock({ reasoning, isStreaming }: Props) {
         />
       </button>
 
-      {isOpen && (
-        <div className="border-t border-cream-border px-3 py-2 max-h-64 overflow-y-auto">
-          <pre className="font-mono text-xs leading-relaxed text-ink-soft whitespace-pre-wrap break-words m-0">
-            {reasoning}
-          </pre>
-        </div>
-      )}
+      <AnimatePresence initial={false}>
+        {isOpen && (
+          <motion.div
+            initial={{ height: 0, opacity: 0 }}
+            animate={{ height: 'auto', opacity: 1 }}
+            exit={{ height: 0, opacity: 0 }}
+            transition={{ duration: 0.25, ease: [0.16, 1, 0.3, 1] }}
+          >
+            <div className="border-t border-cream-border px-3 py-2 max-h-64 overflow-y-auto">
+              <pre className="font-mono text-xs leading-relaxed text-ink-soft whitespace-pre-wrap break-words m-0">
+                {reasoning}
+              </pre>
+            </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
     </div>
   )
 }

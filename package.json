@@ -26,6 +26,7 @@
     "@ai-sdk/togetherai": "^2.0.55",
     "@ai-sdk/xai": "^3.0.95",
     "ai": "^6.0.206",
+    "framer-motion": "^13.2.0",
     "lucide-react": "^1.18.0",
     "react": "^19.2.6",
     "react-dom": "^19.2.6",

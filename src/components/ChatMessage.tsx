@@ -23,9 +23,9 @@ export function ChatMessage({ message, isStreaming }: Props) {
 
   return (
     <div
-      className={`animate-[fade-in_0.3s_ease-out] flex gap-3 rounded-doodle-md border px-4 py-4 ${
+      className={`flex gap-3 rounded-doodle-lg border px-4 py-4 ${
         isUser
-          ? 'border-cream-border border-l-2 border-l-accent bg-accent/8'
+          ? 'border-accent/15 bg-accent/8'
           : 'border-cream-border bg-cream-light shadow-doodle-card'
       }`}
     >
@@ -41,7 +41,7 @@ export function ChatMessage({ message, isStreaming }: Props) {
 
       <div className="min-w-0 flex-1">
         <div className="mb-1.5 flex items-center gap-2">
-          <span className="text-xs font-medium text-ink-soft">
+          <span className={`text-xs font-semibold ${isUser ? 'text-accent-hover' : 'text-ink-soft'}`}>
             {isUser ? 'You' : 'Assistant'}
           </span>
           <span className="font-mono text-[11px] text-ink-muted tabular-nums">
@@ -57,7 +57,7 @@ export function ChatMessage({ message, isStreaming }: Props) {
         )}
 
         {message.content ? (
-          <div className="font-body text-[15px] leading-relaxed text-ink">
+          <div className={`font-body text-[15px] leading-relaxed text-ink ${isStreaming ? 'streaming-tail' : ''}`}>
             <ReactMarkdown
               remarkPlugins={[remarkGfm]}
               components={{
