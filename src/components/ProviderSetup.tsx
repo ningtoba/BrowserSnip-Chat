@@ -127,28 +127,28 @@ export function ProviderSetup({ onConfigured, initialConfig }: Props) {
   }
 
   return (
-    <div className="flex h-full items-center justify-center bg-[#0a0b10] p-6">
-      <div className="w-full max-w-lg animate-[doodle-pop_0.35s_cubic-bezier(0.34,1.56,0.64,1)]">
+    <div className="flex h-full items-center justify-center bg-cream p-6">
+      <div className="w-full max-w-lg animate-[doodle-pop_0.25s_cubic-bezier(0.16,1,0.3,1)]">
         {/* Header */}
         <div className="mb-8 text-center">
-          <div className="mx-auto mb-4 flex h-12 w-12 items-center justify-center rounded-[10px] bg-[#6366f1]/10 shadow-[0_0_20px_rgba(99,102,241,0.15)]">
-            <Zap className="h-6 w-6 text-[#6366f1]" />
+          <div className="mx-auto mb-4 flex h-12 w-12 items-center justify-center rounded-doodle-md border border-cream-border bg-cream-light shadow-glow">
+            <Zap className="h-6 w-6 text-accent" />
           </div>
-          <h1 className="font-display text-2xl font-semibold tracking-tight text-[#eeeff5]">
+          <h1 className="font-display text-2xl font-semibold tracking-tight text-ink">
             BrowserSnip Chat
           </h1>
-          <p className="mt-2 text-sm text-[#a8adc4]">
+          <p className="mt-2 text-sm text-ink-soft">
             Configure your AI provider to get started
           </p>
         </div>
 
         <form
           onSubmit={handleSubmit}
-          className="doodle-section space-y-5 !rounded-[10px]"
+          className="doodle-section space-y-5"
         >
           {/* Provider Select */}
           <div>
-            <label className="mb-1.5 block text-sm font-medium text-[#a8adc4]">
+            <label className="mb-1.5 block text-sm font-medium text-ink-soft">
               Provider
             </label>
             <select
@@ -169,7 +169,7 @@ export function ProviderSetup({ onConfigured, initialConfig }: Props) {
           {provider && (provider.requiresApiKey || provider.id === 'custom') && (
             <div>
               <div className="mb-1.5 flex items-center justify-between">
-                <label className="text-sm font-medium text-[#a8adc4]">
+                <label className="text-sm font-medium text-ink-soft">
                   {provider.apiKeyLabel}
                 </label>
                 {provider.apiKeyHelpUrl && (
@@ -177,14 +177,14 @@ export function ProviderSetup({ onConfigured, initialConfig }: Props) {
                     href={provider.apiKeyHelpUrl}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="inline-flex items-center gap-1 text-xs text-[#818cf8] hover:underline"
+                    className="inline-flex items-center gap-1 text-xs text-accent hover:underline"
                   >
                     Get key <ExternalLink className="h-3 w-3" />
                   </a>
                 )}
               </div>
               <div className="relative">
-                <Key className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-[#5c6080]" />
+                <Key className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-ink-muted" />
                 <input
                   type={showApiKey ? 'text' : 'password'}
                   value={apiKey}
@@ -195,7 +195,7 @@ export function ProviderSetup({ onConfigured, initialConfig }: Props) {
                 <button
                   type="button"
                   onClick={() => setShowApiKey(!showApiKey)}
-                  className="absolute right-3 top-1/2 -translate-y-1/2 text-xs text-[#5c6080] hover:text-[#a8adc4]"
+                  className="absolute right-3 top-1/2 -translate-y-1/2 text-xs text-ink-muted hover:text-ink-soft"
                 >
                   {showApiKey ? 'Hide' : 'Show'}
                 </button>
@@ -206,7 +206,7 @@ export function ProviderSetup({ onConfigured, initialConfig }: Props) {
           {/* Extra fields (Bedrock, Azure, custom base URL) */}
           {provider?.extraFields?.map((field) => (
             <div key={field.name}>
-              <label className="mb-1.5 block text-sm font-medium text-[#a8adc4]">
+              <label className="mb-1.5 block text-sm font-medium text-ink-soft">
                 {field.label}
               </label>
               <input
@@ -217,7 +217,7 @@ export function ProviderSetup({ onConfigured, initialConfig }: Props) {
                 className="doodle-input"
               />
               {field.helpText && (
-                <p className="mt-1 text-xs text-[#5c6080]">{field.helpText}</p>
+                <p className="mt-1 text-xs text-ink-muted">{field.helpText}</p>
               )}
             </div>
           ))}
@@ -225,7 +225,7 @@ export function ProviderSetup({ onConfigured, initialConfig }: Props) {
           {/* Base URL for OpenAI-compatible providers */}
           {provider?.isOpenAICompatible && provider.id !== 'openrouter' && provider.id !== 'ollama' && provider.id !== 'lmstudio' && (
             <div>
-              <label className="mb-1.5 block text-sm font-medium text-[#a8adc4]">
+              <label className="mb-1.5 block text-sm font-medium text-ink-soft">
                 Base URL
               </label>
               <input
@@ -254,7 +254,7 @@ export function ProviderSetup({ onConfigured, initialConfig }: Props) {
                   </>
                 ) : fetchStatus === 'success' ? (
                   <>
-                    <CheckCircle2 className="h-4 w-4 text-[#34d399]" />
+                    <CheckCircle2 className="h-4 w-4 text-success" />
                     {hasFetchedModels
                       ? `Models loaded (${fetchedModels!.length} available)`
                       : 'Connection verified'}
@@ -269,14 +269,14 @@ export function ProviderSetup({ onConfigured, initialConfig }: Props) {
 
               {/* Idle hint */}
               {fetchStatus === 'idle' && canFetch() && (
-                <p className="mt-1.5 text-xs text-[#5c6080]">
+                <p className="mt-1.5 text-xs text-ink-muted">
                   Click to verify your API key and load available models
                 </p>
               )}
 
               {/* Success message */}
               {fetchStatus === 'success' && (
-                <p className="mt-1.5 text-xs text-[#34d399]">
+                <p className="mt-1.5 text-xs text-success">
                   {hasFetchedModels
                     ? 'Connection verified — select a model below'
                     : 'Connection verified — enter a model name below'}
@@ -285,9 +285,9 @@ export function ProviderSetup({ onConfigured, initialConfig }: Props) {
 
               {/* Fetch error */}
               {fetchStatus === 'error' && fetchError && (
-                <div className="mt-2 flex items-start gap-2 rounded-[6px] border border-[#f87171]/20 bg-[#f87171]/10 px-3 py-2">
-                  <AlertCircle className="mt-0.5 h-4 w-4 shrink-0 text-[#f87171]" />
-                  <p className="text-xs text-[#f87171]">{fetchError}</p>
+                <div className="mt-2 flex items-start gap-2 rounded-doodle border border-danger/20 bg-danger/10 px-3 py-2">
+                  <AlertCircle className="mt-0.5 h-4 w-4 shrink-0 text-danger" />
+                  <p className="text-xs text-danger">{fetchError}</p>
                 </div>
               )}
             </div>
@@ -296,7 +296,7 @@ export function ProviderSetup({ onConfigured, initialConfig }: Props) {
           {/* Model dropdown — only after successful fetch with models */}
           {hasFetchedModels && (
             <div className="animate-[fade-in_0.3s_ease-out]">
-              <label className="mb-1.5 block text-sm font-medium text-[#a8adc4]">
+              <label className="mb-1.5 block text-sm font-medium text-ink-soft">
                 Model
               </label>
               <select
@@ -329,7 +329,7 @@ export function ProviderSetup({ onConfigured, initialConfig }: Props) {
           {/* Custom model input — after successful fetch but no models returned (e.g. Anthropic) */}
           {fetchStatus === 'success' && fetchedModels !== null && fetchedModels.length === 0 && (
             <div className="animate-[fade-in_0.3s_ease-out]">
-              <label className="mb-1.5 block text-sm font-medium text-[#a8adc4]">
+              <label className="mb-1.5 block text-sm font-medium text-ink-soft">
                 Model Name
               </label>
               <input
@@ -339,7 +339,7 @@ export function ProviderSetup({ onConfigured, initialConfig }: Props) {
                 placeholder="e.g. claude-sonnet-4-6"
                 className="doodle-input"
               />
-              <p className="mt-1 text-xs text-[#5c6080]">
+              <p className="mt-1 text-xs text-ink-muted">
                 This provider does not expose a model list. Enter the model name manually.
               </p>
             </div>

@@ -43,7 +43,7 @@ export function ChatInput({ onSend, onStop, isStreaming, disabled }: Props) {
   }
 
   return (
-    <div className="border-t border-[#1e2035] bg-[#0d0f17] px-4 py-3">
+    <div className="border-t border-cream-border bg-cream-light px-4 py-3">
       <div className="flex items-end gap-3">
         <div className="relative flex-1">
           <textarea
@@ -54,14 +54,14 @@ export function ChatInput({ onSend, onStop, isStreaming, disabled }: Props) {
             placeholder={disabled ? 'Configure a provider to start…' : 'Type a message…'}
             disabled={disabled}
             rows={1}
-            className="doodle-input resize-none !rounded-[10px] !py-2.5 !px-4 !font-body !text-[15px]"
+            className="doodle-input resize-none !rounded-doodle-md !py-2.5 !px-4 !font-body !text-[15px]"
           />
         </div>
 
         {isStreaming ? (
           <button
             onClick={onStop}
-            className="flex h-10 w-10 shrink-0 items-center justify-center rounded-[10px] bg-[#f87171]/15 text-[#f87171] transition-colors hover:bg-[#f87171]/25 border border-[#f87171]/20"
+            className="flex h-10 w-10 shrink-0 items-center justify-center rounded-doodle-md bg-danger/10 text-danger transition-colors hover:bg-danger/15 border border-danger/20"
             title="Stop generating"
           >
             <Square className="h-4 w-4" fill="currentColor" />
@@ -70,11 +70,7 @@ export function ChatInput({ onSend, onStop, isStreaming, disabled }: Props) {
           <button
             onClick={handleSubmit}
             disabled={!input.trim() || disabled}
-            className="flex h-10 w-10 shrink-0 items-center justify-center rounded-[10px] transition-all duration-200 active:scale-[0.95] disabled:cursor-not-allowed disabled:opacity-30 text-white"
-            style={{
-              background: 'linear-gradient(135deg, #6366f1, #5558e6)',
-              boxShadow: '0 2px 8px rgba(99, 102, 241, 0.3)',
-            }}
+            className="flex h-10 w-10 shrink-0 items-center justify-center rounded-doodle-md bg-accent text-white transition-all duration-150 hover:bg-accent-hover active:scale-[0.95] disabled:cursor-not-allowed disabled:opacity-45"
             title="Send message"
           >
             <Send className="h-4 w-4" />

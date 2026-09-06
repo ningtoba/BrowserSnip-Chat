@@ -49,7 +49,7 @@ export default function App() {
         onOpenSettings={() => setView('settings')}
         currentConfig={chat.activeSession?.providerConfig ?? getLastProviderConfig()}
       />
-      <div className="flex flex-1 flex-col bg-[#0a0b10]">
+      <div className="flex flex-1 flex-col bg-cream">
         <ChatWindow
           messages={chat.messages}
           isStreaming={chat.isStreaming}

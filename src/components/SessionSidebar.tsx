@@ -39,17 +39,17 @@ export function SessionSidebar({
 
   if (collapsed) {
     return (
-      <div className="flex w-12 flex-col items-center border-r border-[#1e2035] bg-[#0d0f17] py-3">
+      <div className="flex w-12 flex-col items-center border-r border-cream-border bg-cream-light py-3">
         <button
           onClick={() => setCollapsed(false)}
-          className="rounded-[6px] p-2 text-[#5c6080] hover:bg-[#161922] hover:text-[#a8adc4]"
+          className="rounded-doodle p-2 text-ink-muted hover:bg-cream-soft hover:text-ink-soft"
           title="Expand sidebar"
         >
           <ChevronLeft className="h-5 w-5 rotate-180" />
         </button>
         <button
           onClick={handleNewChat}
-          className="mt-3 rounded-[6px] p-2 text-[#5c6080] hover:bg-[#161922] hover:text-[#eeeff5]"
+          className="mt-3 rounded-doodle p-2 text-ink-muted hover:bg-cream-soft hover:text-ink"
           title="New chat"
         >
           <Plus className="h-5 w-5" />
@@ -59,24 +59,24 @@ export function SessionSidebar({
   }
 
   return (
-    <div className="flex w-64 flex-col border-r border-[#1e2035] bg-[#0d0f17]">
+    <div className="flex w-64 flex-col border-r border-cream-border bg-cream-light">
       {/* Header */}
-      <div className="flex items-center justify-between border-b border-[#1e2035] px-3 py-3">
+      <div className="flex items-center justify-between border-b border-cream-border px-3 py-3">
         <div className="flex items-center gap-2">
-          <MessageSquare className="h-5 w-5 text-[#6366f1]" />
-          <span className="font-display text-sm font-semibold text-[#eeeff5]">Sessions</span>
+          <MessageSquare className="h-5 w-5 text-accent" />
+          <span className="font-display text-sm font-semibold tracking-tight text-ink">Sessions</span>
         </div>
         <div className="flex items-center gap-1">
           <button
             onClick={handleNewChat}
-            className="rounded-[6px] p-1.5 text-[#5c6080] hover:bg-[#161922] hover:text-[#eeeff5]"
+            className="rounded-doodle p-1.5 text-ink-muted hover:bg-cream-soft hover:text-ink"
             title="New chat"
           >
             <Plus className="h-4 w-4" />
           </button>
           <button
             onClick={() => setCollapsed(true)}
-            className="rounded-[6px] p-1.5 text-[#5c6080] hover:bg-[#161922]"
+            className="rounded-doodle p-1.5 text-ink-muted hover:bg-cream-soft"
             title="Collapse sidebar"
           >
             <ChevronLeft className="h-4 w-4" />
@@ -87,7 +87,7 @@ export function SessionSidebar({
       {/* Session list */}
       <div className="flex-1 overflow-y-auto px-2 py-2">
         {sessions.length === 0 ? (
-          <p className="px-2 py-4 text-center text-xs text-[#5c6080]">
+          <p className="px-2 py-4 text-center text-xs text-ink-muted">
             No sessions yet. Start a new chat.
           </p>
         ) : (
@@ -103,10 +103,10 @@ export function SessionSidebar({
                   onSelect(session.id)
                 }
               }}
-              className={`group mb-0.5 flex w-full items-center gap-2 rounded-[6px] px-3 py-2 text-left text-sm transition-colors cursor-pointer select-none ${
+              className={`group mb-0.5 flex w-full items-center gap-2 rounded-doodle px-3 py-2 text-left text-sm transition-colors cursor-pointer select-none ${
                 session.id === activeSessionId
-                  ? 'bg-[#6366f1]/10 text-[#eeeff5] border border-[#6366f1]/20'
-                  : 'text-[#a8adc4] hover:bg-[#161922] hover:text-[#eeeff5] border border-transparent'
+                  ? 'bg-accent/8 text-ink border border-accent/20'
+                  : 'text-ink-soft hover:bg-cream-soft hover:text-ink border border-transparent'
               }`}
             >
               <span className="flex-1 truncate">{session.title}</span>
@@ -115,7 +115,7 @@ export function SessionSidebar({
                   e.stopPropagation()
                   onDelete(session.id)
                 }}
-                className="rounded p-0.5 text-[#5c6080] opacity-0 transition-opacity hover:bg-[#0a0b10] hover:text-[#f87171] group-hover:opacity-100"
+                className="rounded p-0.5 text-ink-muted opacity-0 transition-opacity hover:bg-cream-border/60 hover:text-danger group-hover:opacity-100"
                 title="Delete session"
               >
                 <Trash2 className="h-3.5 w-3.5" />
@@ -126,18 +126,18 @@ export function SessionSidebar({
       </div>
 
       {/* Footer */}
-      <div className="border-t border-[#1e2035] px-3 py-3">
+      <div className="border-t border-cream-border px-3 py-3">
         {providerName && (
-          <p className="mb-2 text-xs text-[#5c6080]">
-            Using <span className="font-medium text-[#a8adc4]">{providerName}</span>
+          <p className="mb-2 text-xs text-ink-muted">
+            Using <span className="font-medium text-ink-soft">{providerName}</span>
             {currentConfig && (
-              <> — <code className="rounded bg-[#161922] px-1 py-0.5 text-[11px] text-[#a5b4fc]">{currentConfig.model}</code></>
+              <> — <code className="rounded bg-cream-soft px-1 py-0.5 text-[11px] text-accent-hover">{currentConfig.model}</code></>
             )}
           </p>
         )}
         <button
           onClick={onOpenSettings}
-          className="flex w-full items-center gap-2 rounded-[6px] px-2 py-1.5 text-xs text-[#5c6080] transition-colors hover:bg-[#161922] hover:text-[#a8adc4]"
+          className="flex w-full items-center gap-2 rounded-doodle px-2 py-1.5 text-xs text-ink-muted transition-colors hover:bg-cream-soft hover:text-ink-soft"
         >
           <Settings className="h-3.5 w-3.5" />
           Change Provider
